@@ -1,0 +1,33 @@
+{
+  "project_id": "ANG-P2",
+  "name": "Al Noor Gardens, Phase 2: Infrastructure and Landscaping Package",
+  "note": "Fictional project created for a proof of concept. All names, quantities, rates and dates are illustrative.",
+  "employer": "Developer (Employer)",
+  "contractor": "Delta Build Contracting LLC (fictional)",
+  "contract_ref": "ANG-P2-C01",
+  "contract_type": "Remeasurable bill of quantities, with some lump-sum preliminaries",
+  "currency": "AED",
+  "calendar": {
+    "start_date": "2026-10-26",
+    "working_days": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "non_working_days": [
+      "Sun"
+    ],
+    "holidays": []
+  },
+  "data_date_working_day": 8,
+  "data_date": "2026-11-04",
+  "contract_completion_working_day": 87,
+  "contract_completion_date": "2027-02-03",
+  "employer_commitment_working_day": 107,
+  "employer_commitment_date": "2027-02-26",
+  "time_buffer_working_days": 20,
+  "cost_contingency_remaining_aed": 65000
+}

@@ -1,0 +1,32 @@
+{
+  "time_related_cost_per_working_day_aed": 2500,
+  "additional_crew": {
+    "mobilisation_aed_per_crew_per_activity": 3000,
+    "day_rate_aed": 1800,
+    "max_additional_crews_per_activity": 1,
+    "rule": "With one additional crew, the activity's new duration = ceiling(new duration / 2). Crew cost = mobilisation + day rate x accelerated duration.",
+    "eligible_activities_by_change_type": {
+      "wall_height": [
+        "A320",
+        "A330",
+        "A340"
+      ],
+      "road_widening": [
+        "A100",
+        "A110",
+        "A120"
+      ],
+      "paving_area": [
+        "A420"
+      ]
+    }
+  },
+  "contract_clause_refs": {
+    "valuation": "13.3",
+    "preliminaries": "13.4",
+    "extension_of_time": "8.4",
+    "time_related_costs": "8.5",
+    "acceleration": "8.6",
+    "notice": "20.1"
+  }
+}

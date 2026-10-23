@@ -1,0 +1,963 @@
+{
+  "conventions": "Working days from 0 (Mon 26 Oct 2026, Sundays off, no holidays). Completion date of finish EF = date of working day EF-1. Delay = max(0, completion - baseline completion). Option ids: OPT-NONE or OPT- plus activity ids in schedule order.",
+  "baseline": {
+    "completion_working_day": 87,
+    "completion_date": "2027-02-03",
+    "critical_path": [
+      "A010",
+      "A020",
+      "A100",
+      "A110",
+      "A120",
+      "A130",
+      "A140",
+      "A150",
+      "A240",
+      "A900",
+      "A910",
+      "A920"
+    ],
+    "activities": {
+      "A010": {
+        "ES": 0,
+        "EF": 5,
+        "TF": 0
+      },
+      "A020": {
+        "ES": 5,
+        "EF": 8,
+        "TF": 0
+      },
+      "A100": {
+        "ES": 8,
+        "EF": 24,
+        "TF": 0
+      },
+      "A110": {
+        "ES": 24,
+        "EF": 32,
+        "TF": 0
+      },
+      "A120": {
+        "ES": 32,
+        "EF": 42,
+        "TF": 0
+      },
+      "A130": {
+        "ES": 42,
+        "EF": 50,
+        "TF": 0
+      },
+      "A140": {
+        "ES": 50,
+        "EF": 55,
+        "TF": 0
+      },
+      "A150": {
+        "ES": 55,
+        "EF": 59,
+        "TF": 0
+      },
+      "A160": {
+        "ES": 59,
+        "EF": 62,
+        "TF": 15
+      },
+      "A200": {
+        "ES": 8,
+        "EF": 18,
+        "TF": 7
+      },
+      "A210": {
+        "ES": 18,
+        "EF": 33,
+        "TF": 7
+      },
+      "A220": {
+        "ES": 23,
+        "EF": 35,
+        "TF": 7
+      },
+      "A230": {
+        "ES": 33,
+        "EF": 43,
+        "TF": 16
+      },
+      "A240": {
+        "ES": 59,
+        "EF": 67,
+        "TF": 0
+      },
+      "A300": {
+        "ES": 8,
+        "EF": 12,
+        "TF": 6
+      },
+      "A310": {
+        "ES": 12,
+        "EF": 16,
+        "TF": 6
+      },
+      "A320": {
+        "ES": 16,
+        "EF": 36,
+        "TF": 6
+      },
+      "A330": {
+        "ES": 36,
+        "EF": 56,
+        "TF": 6
+      },
+      "A335": {
+        "ES": 56,
+        "EF": 61,
+        "TF": 6
+      },
+      "A340": {
+        "ES": 61,
+        "EF": 71,
+        "TF": 6
+      },
+      "A400": {
+        "ES": 35,
+        "EF": 45,
+        "TF": 7
+      },
+      "A410": {
+        "ES": 45,
+        "EF": 60,
+        "TF": 7
+      },
+      "A420": {
+        "ES": 50,
+        "EF": 62,
+        "TF": 10
+      },
+      "A430": {
+        "ES": 62,
+        "EF": 67,
+        "TF": 10
+      },
+      "A900": {
+        "ES": 67,
+        "EF": 77,
+        "TF": 0
+      },
+      "A910": {
+        "ES": 77,
+        "EF": 87,
+        "TF": 0
+      },
+      "A920": {
+        "ES": 87,
+        "EF": 87,
+        "TF": 0
+      }
+    }
+  },
+  "employer_commitment": {
+    "working_day": 107,
+    "date": "2027-02-26"
+  },
+  "cases": [
+    {
+      "change_type": "wall_height",
+      "parameters": {
+        "new_height_m": 2.5
+      },
+      "quantity_delta": {
+        "B-04-010": 200.0,
+        "B-04-015": 2.02,
+        "B-04-020": 400.0,
+        "B-04-040": 400.0,
+        "B-04-030": 0.0
+      },
+      "requires_review": [
+        {
+          "code": "B-04-005",
+          "reason": "footing designed for previous wall height; structural check needed"
+        },
+        {
+          "code": "B-04-008",
+          "reason": "footing designed for previous wall height; structural check needed"
+        }
+      ],
+      "unaffected": [
+        "B-04-030"
+      ],
+      "cost_lines": {
+        "B-04-010": 19000.0,
+        "B-04-015": 2929.0,
+        "B-04-020": 12800.0,
+        "B-04-040": 8800.0
+      },
+      "direct_cost_aed": 43529.0,
+      "added_duration": {
+        "A320": 6,
+        "A330": 5,
+        "A340": 3
+      },
+      "new_durations": {
+        "A320": 26,
+        "A330": 25,
+        "A340": 13
+      },
+      "impacted_completion_working_day_no_acceleration": 95,
+      "options_all": [
+        {
+          "option_id": "OPT-NONE",
+          "extra_crews_on": [],
+          "completion_working_day": 95,
+          "completion_date": "2027-02-12",
+          "delay_working_days": 8,
+          "acceleration_cost_aed": 0,
+          "time_related_cost_aed": 20000,
+          "total_cost_aed": 63529.0,
+          "time_buffer_remaining_days": 12,
+          "contingency_remaining_aed": 1471.0
+        },
+        {
+          "option_id": "OPT-A320",
+          "extra_crews_on": [
+            "A320"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 26400,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 69929.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -4929.0
+        },
+        {
+          "option_id": "OPT-A330",
+          "extra_crews_on": [
+            "A330"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 26400,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 69929.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -4929.0
+        },
+        {
+          "option_id": "OPT-A340",
+          "extra_crews_on": [
+            "A340"
+          ],
+          "completion_working_day": 89,
+          "completion_date": "2027-02-05",
+          "delay_working_days": 2,
+          "acceleration_cost_aed": 15600,
+          "time_related_cost_aed": 5000,
+          "total_cost_aed": 64129.0,
+          "time_buffer_remaining_days": 18,
+          "contingency_remaining_aed": 871.0
+        },
+        {
+          "option_id": "OPT-A320-A330",
+          "extra_crews_on": [
+            "A320",
+            "A330"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 52800,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 96329.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -31329.0
+        },
+        {
+          "option_id": "OPT-A320-A340",
+          "extra_crews_on": [
+            "A320",
+            "A340"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 42000,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 85529.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -20529.0
+        },
+        {
+          "option_id": "OPT-A330-A340",
+          "extra_crews_on": [
+            "A330",
+            "A340"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 42000,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 85529.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -20529.0
+        },
+        {
+          "option_id": "OPT-A320-A330-A340",
+          "extra_crews_on": [
+            "A320",
+            "A330",
+            "A340"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 68400,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 111929.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -46929.0
+        }
+      ],
+      "pareto_option_ids": [
+        "OPT-A320",
+        "OPT-A340",
+        "OPT-NONE"
+      ]
+    },
+    {
+      "change_type": "wall_height",
+      "parameters": {
+        "new_height_m": 3.0
+      },
+      "quantity_delta": {
+        "B-04-010": 400.0,
+        "B-04-015": 4.04,
+        "B-04-020": 800.0,
+        "B-04-040": 800.0,
+        "B-04-030": 0.0
+      },
+      "requires_review": [
+        {
+          "code": "B-04-005",
+          "reason": "footing designed for previous wall height; structural check needed"
+        },
+        {
+          "code": "B-04-008",
+          "reason": "footing designed for previous wall height; structural check needed"
+        }
+      ],
+      "unaffected": [
+        "B-04-030"
+      ],
+      "cost_lines": {
+        "B-04-010": 38000.0,
+        "B-04-015": 5858.0,
+        "B-04-020": 25600.0,
+        "B-04-040": 17600.0
+      },
+      "direct_cost_aed": 87058.0,
+      "added_duration": {
+        "A320": 12,
+        "A330": 10,
+        "A340": 5
+      },
+      "new_durations": {
+        "A320": 32,
+        "A330": 30,
+        "A340": 15
+      },
+      "impacted_completion_working_day_no_acceleration": 108,
+      "options_all": [
+        {
+          "option_id": "OPT-NONE",
+          "extra_crews_on": [],
+          "completion_working_day": 108,
+          "completion_date": "2027-02-27",
+          "delay_working_days": 21,
+          "acceleration_cost_aed": 0,
+          "time_related_cost_aed": 52500,
+          "total_cost_aed": 139558.0,
+          "time_buffer_remaining_days": -1,
+          "contingency_remaining_aed": -74558.0
+        },
+        {
+          "option_id": "OPT-A320",
+          "extra_crews_on": [
+            "A320"
+          ],
+          "completion_working_day": 92,
+          "completion_date": "2027-02-09",
+          "delay_working_days": 5,
+          "acceleration_cost_aed": 31800,
+          "time_related_cost_aed": 12500,
+          "total_cost_aed": 131358.0,
+          "time_buffer_remaining_days": 15,
+          "contingency_remaining_aed": -66358.0
+        },
+        {
+          "option_id": "OPT-A330",
+          "extra_crews_on": [
+            "A330"
+          ],
+          "completion_working_day": 93,
+          "completion_date": "2027-02-10",
+          "delay_working_days": 6,
+          "acceleration_cost_aed": 30000,
+          "time_related_cost_aed": 15000,
+          "total_cost_aed": 132058.0,
+          "time_buffer_remaining_days": 14,
+          "contingency_remaining_aed": -67058.0
+        },
+        {
+          "option_id": "OPT-A340",
+          "extra_crews_on": [
+            "A340"
+          ],
+          "completion_working_day": 101,
+          "completion_date": "2027-02-19",
+          "delay_working_days": 14,
+          "acceleration_cost_aed": 17400,
+          "time_related_cost_aed": 35000,
+          "total_cost_aed": 139458.0,
+          "time_buffer_remaining_days": 6,
+          "contingency_remaining_aed": -74458.0
+        },
+        {
+          "option_id": "OPT-A320-A330",
+          "extra_crews_on": [
+            "A320",
+            "A330"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 61800,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 148858.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -83858.0
+        },
+        {
+          "option_id": "OPT-A320-A340",
+          "extra_crews_on": [
+            "A320",
+            "A340"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 49200,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 136258.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -71258.0
+        },
+        {
+          "option_id": "OPT-A330-A340",
+          "extra_crews_on": [
+            "A330",
+            "A340"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 47400,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 134458.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -69458.0
+        },
+        {
+          "option_id": "OPT-A320-A330-A340",
+          "extra_crews_on": [
+            "A320",
+            "A330",
+            "A340"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 79200,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 166258.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -101258.0
+        }
+      ],
+      "pareto_option_ids": [
+        "OPT-A330-A340",
+        "OPT-A320"
+      ]
+    },
+    {
+      "change_type": "road_widening",
+      "parameters": {
+        "widen_by_m": 1.0,
+        "length_m": 600
+      },
+      "quantity_delta": {
+        "R-02-010": 480.0,
+        "R-02-020": 600.0,
+        "R-02-030": 600.0,
+        "R-02-040": 600.0,
+        "R-02-060": 600.0,
+        "R-02-070": 600.0,
+        "R-02-080": 0.0
+      },
+      "requires_review": [
+        {
+          "code": "R-02-050",
+          "reason": "kerb line moves over the widened length; removal and re-laying has no BOQ rate, so a new rate is needed (clause 13.3)"
+        }
+      ],
+      "unaffected": [
+        "R-02-080"
+      ],
+      "cost_lines": {
+        "R-02-010": 8640.0,
+        "R-02-020": 5400.0,
+        "R-02-030": 16800.0,
+        "R-02-040": 19200.0,
+        "R-02-060": 28800.0,
+        "R-02-070": 21600.0
+      },
+      "direct_cost_aed": 100440.0,
+      "added_duration": {
+        "A100": 1,
+        "A110": 1,
+        "A120": 1,
+        "A140": 1,
+        "A150": 1
+      },
+      "new_durations": {
+        "A100": 17,
+        "A110": 9,
+        "A120": 11,
+        "A140": 6,
+        "A150": 5
+      },
+      "impacted_completion_working_day_no_acceleration": 92,
+      "options_all": [
+        {
+          "option_id": "OPT-NONE",
+          "extra_crews_on": [],
+          "completion_working_day": 92,
+          "completion_date": "2027-02-09",
+          "delay_working_days": 5,
+          "acceleration_cost_aed": 0,
+          "time_related_cost_aed": 12500,
+          "total_cost_aed": 112940.0,
+          "time_buffer_remaining_days": 15,
+          "contingency_remaining_aed": -47940.0
+        },
+        {
+          "option_id": "OPT-A100",
+          "extra_crews_on": [
+            "A100"
+          ],
+          "completion_working_day": 84,
+          "completion_date": "2027-01-30",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 19200,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 119640.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -54640.0
+        },
+        {
+          "option_id": "OPT-A110",
+          "extra_crews_on": [
+            "A110"
+          ],
+          "completion_working_day": 88,
+          "completion_date": "2027-02-04",
+          "delay_working_days": 1,
+          "acceleration_cost_aed": 12000,
+          "time_related_cost_aed": 2500,
+          "total_cost_aed": 114940.0,
+          "time_buffer_remaining_days": 19,
+          "contingency_remaining_aed": -49940.0
+        },
+        {
+          "option_id": "OPT-A120",
+          "extra_crews_on": [
+            "A120"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 13800,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 114240.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -49240.0
+        },
+        {
+          "option_id": "OPT-A100-A110",
+          "extra_crews_on": [
+            "A100",
+            "A110"
+          ],
+          "completion_working_day": 81,
+          "completion_date": "2027-01-27",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 31200,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 131640.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -66640.0
+        },
+        {
+          "option_id": "OPT-A100-A120",
+          "extra_crews_on": [
+            "A100",
+            "A120"
+          ],
+          "completion_working_day": 81,
+          "completion_date": "2027-01-27",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 33000,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 133440.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -68440.0
+        },
+        {
+          "option_id": "OPT-A110-A120",
+          "extra_crews_on": [
+            "A110",
+            "A120"
+          ],
+          "completion_working_day": 83,
+          "completion_date": "2027-01-29",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 25800,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 126240.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -61240.0
+        },
+        {
+          "option_id": "OPT-A100-A110-A120",
+          "extra_crews_on": [
+            "A100",
+            "A110",
+            "A120"
+          ],
+          "completion_working_day": 81,
+          "completion_date": "2027-01-27",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 45000,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 145440.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -80440.0
+        }
+      ],
+      "pareto_option_ids": [
+        "OPT-A120",
+        "OPT-NONE"
+      ]
+    },
+    {
+      "change_type": "road_widening",
+      "parameters": {
+        "widen_by_m": 2.0,
+        "length_m": 1500
+      },
+      "quantity_delta": {
+        "R-02-010": 2400.0,
+        "R-02-020": 3000.0,
+        "R-02-030": 3000.0,
+        "R-02-040": 3000.0,
+        "R-02-060": 3000.0,
+        "R-02-070": 3000.0,
+        "R-02-080": 0.0
+      },
+      "requires_review": [
+        {
+          "code": "R-02-050",
+          "reason": "kerb line moves over the widened length; removal and re-laying has no BOQ rate, so a new rate is needed (clause 13.3)"
+        }
+      ],
+      "unaffected": [
+        "R-02-080"
+      ],
+      "cost_lines": {
+        "R-02-010": 43200.0,
+        "R-02-020": 27000.0,
+        "R-02-030": 84000.0,
+        "R-02-040": 96000.0,
+        "R-02-060": 144000.0,
+        "R-02-070": 108000.0
+      },
+      "direct_cost_aed": 502200.0,
+      "added_duration": {
+        "A100": 4,
+        "A110": 2,
+        "A120": 3,
+        "A140": 2,
+        "A150": 1
+      },
+      "new_durations": {
+        "A100": 20,
+        "A110": 10,
+        "A120": 13,
+        "A140": 7,
+        "A150": 5
+      },
+      "impacted_completion_working_day_no_acceleration": 99,
+      "options_all": [
+        {
+          "option_id": "OPT-NONE",
+          "extra_crews_on": [],
+          "completion_working_day": 99,
+          "completion_date": "2027-02-17",
+          "delay_working_days": 12,
+          "acceleration_cost_aed": 0,
+          "time_related_cost_aed": 30000,
+          "total_cost_aed": 532200.0,
+          "time_buffer_remaining_days": 8,
+          "contingency_remaining_aed": -467200.0
+        },
+        {
+          "option_id": "OPT-A100",
+          "extra_crews_on": [
+            "A100"
+          ],
+          "completion_working_day": 89,
+          "completion_date": "2027-02-05",
+          "delay_working_days": 2,
+          "acceleration_cost_aed": 21000,
+          "time_related_cost_aed": 5000,
+          "total_cost_aed": 528200.0,
+          "time_buffer_remaining_days": 18,
+          "contingency_remaining_aed": -463200.0
+        },
+        {
+          "option_id": "OPT-A110",
+          "extra_crews_on": [
+            "A110"
+          ],
+          "completion_working_day": 94,
+          "completion_date": "2027-02-11",
+          "delay_working_days": 7,
+          "acceleration_cost_aed": 12000,
+          "time_related_cost_aed": 17500,
+          "total_cost_aed": 531700.0,
+          "time_buffer_remaining_days": 13,
+          "contingency_remaining_aed": -466700.0
+        },
+        {
+          "option_id": "OPT-A120",
+          "extra_crews_on": [
+            "A120"
+          ],
+          "completion_working_day": 93,
+          "completion_date": "2027-02-10",
+          "delay_working_days": 6,
+          "acceleration_cost_aed": 15600,
+          "time_related_cost_aed": 15000,
+          "total_cost_aed": 532800.0,
+          "time_buffer_remaining_days": 14,
+          "contingency_remaining_aed": -467800.0
+        },
+        {
+          "option_id": "OPT-A100-A110",
+          "extra_crews_on": [
+            "A100",
+            "A110"
+          ],
+          "completion_working_day": 84,
+          "completion_date": "2027-01-30",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 33000,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 535200.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -470200.0
+        },
+        {
+          "option_id": "OPT-A100-A120",
+          "extra_crews_on": [
+            "A100",
+            "A120"
+          ],
+          "completion_working_day": 83,
+          "completion_date": "2027-01-29",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 36600,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 538800.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -473800.0
+        },
+        {
+          "option_id": "OPT-A110-A120",
+          "extra_crews_on": [
+            "A110",
+            "A120"
+          ],
+          "completion_working_day": 88,
+          "completion_date": "2027-02-04",
+          "delay_working_days": 1,
+          "acceleration_cost_aed": 27600,
+          "time_related_cost_aed": 2500,
+          "total_cost_aed": 532300.0,
+          "time_buffer_remaining_days": 19,
+          "contingency_remaining_aed": -467300.0
+        },
+        {
+          "option_id": "OPT-A100-A110-A120",
+          "extra_crews_on": [
+            "A100",
+            "A110",
+            "A120"
+          ],
+          "completion_working_day": 81,
+          "completion_date": "2027-01-27",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 48600,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 550800.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -485800.0
+        }
+      ],
+      "pareto_option_ids": [
+        "OPT-A100-A110",
+        "OPT-A110-A120",
+        "OPT-A100"
+      ]
+    },
+    {
+      "change_type": "paving_area",
+      "parameters": {
+        "added_area_m2": 400
+      },
+      "quantity_delta": {
+        "L-05-050": 400.0,
+        "L-05-060": 0.0
+      },
+      "requires_review": [],
+      "unaffected": [
+        "L-05-060"
+      ],
+      "cost_lines": {
+        "L-05-050": 36800.0
+      },
+      "direct_cost_aed": 36800.0,
+      "added_duration": {
+        "A420": 2
+      },
+      "new_durations": {
+        "A420": 14
+      },
+      "impacted_completion_working_day_no_acceleration": 87,
+      "options_all": [
+        {
+          "option_id": "OPT-NONE",
+          "extra_crews_on": [],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 0,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 36800.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": 28200.0
+        },
+        {
+          "option_id": "OPT-A420",
+          "extra_crews_on": [
+            "A420"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 15600,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 52400.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": 12600.0
+        }
+      ],
+      "pareto_option_ids": [
+        "OPT-NONE"
+      ]
+    },
+    {
+      "change_type": "paving_area",
+      "parameters": {
+        "added_area_m2": 1500
+      },
+      "quantity_delta": {
+        "L-05-050": 1500.0,
+        "L-05-060": 0.0
+      },
+      "requires_review": [],
+      "unaffected": [
+        "L-05-060"
+      ],
+      "cost_lines": {
+        "L-05-050": 138000.0
+      },
+      "direct_cost_aed": 138000.0,
+      "added_duration": {
+        "A420": 5
+      },
+      "new_durations": {
+        "A420": 17
+      },
+      "impacted_completion_working_day_no_acceleration": 87,
+      "options_all": [
+        {
+          "option_id": "OPT-NONE",
+          "extra_crews_on": [],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 0,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 138000.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -73000.0
+        },
+        {
+          "option_id": "OPT-A420",
+          "extra_crews_on": [
+            "A420"
+          ],
+          "completion_working_day": 87,
+          "completion_date": "2027-02-03",
+          "delay_working_days": 0,
+          "acceleration_cost_aed": 19200,
+          "time_related_cost_aed": 0,
+          "total_cost_aed": 157200.0,
+          "time_buffer_remaining_days": 20,
+          "contingency_remaining_aed": -92200.0
+        }
+      ],
+      "pareto_option_ids": [
+        "OPT-NONE"
+      ]
+    }
+  ],
+  "contractor_claim_wall_2_5": {
+    "claimed_subtotal_aed": 55836.0,
+    "claimed_preliminaries_aed": 5583.6,
+    "claimed_total_aed": 61419.6,
+    "claimed_extension_days": 21,
+    "assessed_direct_cost_aed": 43529.0,
+    "difference_direct_aed": 17890.6,
+    "assessed_extension_days_without_acceleration": 8
+  },
+  "notice_check_wall": {
+    "instruction_date": "2026-11-02",
+    "pvr_date": "2026-11-04",
+    "calendar_days": 2,
+    "within_28_days": true
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "units": "quantity per crew per working day",
+  "rule": "Additional duration for an activity = ceiling( sum over its changed items of (quantity change / productivity) ). Baseline durations come from the programme and are not recomputed. Negative changes are not used in this proof of concept.",
+  "items": [
+    {
+      "boq_code": "R-02-010",
+      "activity_id": "A100",
+      "productivity": 600,
+      "unit": "m3"
+    },
+    {
+      "boq_code": "R-02-020",
+      "activity_id": "A110",
+      "productivity": 1500,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "R-02-030",
+      "activity_id": "A120",
+      "productivity": 2400,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "R-02-040",
+      "activity_id": "A120",
+      "productivity": 2400,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "R-02-050",
+      "activity_id": "A130",
+      "productivity": 400,
+      "unit": "m"
+    },
+    {
+      "boq_code": "R-02-060",
+      "activity_id": "A140",
+      "productivity": 2400,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "R-02-070",
+      "activity_id": "A150",
+      "productivity": 3000,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "B-04-005",
+      "activity_id": "A300",
+      "productivity": 60,
+      "unit": "m3"
+    },
+    {
+      "boq_code": "B-04-008",
+      "activity_id": "A310",
+      "productivity": 24,
+      "unit": "m3"
+    },
+    {
+      "boq_code": "B-04-010",
+      "activity_id": "A320",
+      "productivity": 40,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "B-04-015",
+      "activity_id": "A320",
+      "productivity": 4,
+      "unit": "m3"
+    },
+    {
+      "boq_code": "B-04-020",
+      "activity_id": "A330",
+      "productivity": 80,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "B-04-030",
+      "activity_id": "A335",
+      "productivity": 80,
+      "unit": "m"
+    },
+    {
+      "boq_code": "B-04-040",
+      "activity_id": "A340",
+      "productivity": 160,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "L-05-050",
+      "activity_id": "A420",
+      "productivity": 360,
+      "unit": "m2"
+    },
+    {
+      "boq_code": "L-05-060",
+      "activity_id": "A420",
+      "productivity": 210,
+      "unit": "m2"
+    }
+  ]
+}

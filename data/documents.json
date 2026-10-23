@@ -1,0 +1,107 @@
+{
+  "element_geometry": {
+    "internal_road": {
+      "drawing": "R-101",
+      "revision": "A",
+      "length_m": 1500,
+      "formation_width_m": 8.0,
+      "excavation_depth_m": 0.8,
+      "layers": {
+        "R-02-020": "subgrade (area)",
+        "R-02-030": "sub-base (area)",
+        "R-02-040": "base course (area)",
+        "R-02-060": "asphalt binder (area)",
+        "R-02-070": "asphalt wearing (area)"
+      },
+      "note": "Kerbs (R-02-050) run along both edges; widening moves the kerb line on the widened length, which needs kerb removal and re-laying. There is no BOQ rate for that work."
+    },
+    "hardscape": {
+      "drawing": "L-301",
+      "revision": "A",
+      "interlocking_paving_area_m2": 3600,
+      "granite_paving_area_m2": 420,
+      "note": "Interlocking paving rate includes bedding sand and edge restraints."
+    }
+  },
+  "drawing_register": [
+    {
+      "drawing": "L-201",
+      "revision": "B",
+      "title": "Boundary wall elevations and sections",
+      "status": "superseded",
+      "date": "2026-09-15",
+      "key_data": {
+        "wall_height_m": 2.0,
+        "wall_length_m": 400,
+        "wall_thickness_m": 0.2,
+        "faces_finished": 2,
+        "stiffener_column_spacing_m": 4.0,
+        "stiffener_column_section_m": [
+          0.2,
+          0.2
+        ]
+      }
+    },
+    {
+      "drawing": "L-201",
+      "revision": "C",
+      "title": "Boundary wall elevations and sections",
+      "status": "current",
+      "date": "2026-11-02",
+      "key_data": {
+        "wall_height_m": 2.5,
+        "wall_length_m": 400,
+        "wall_thickness_m": 0.2,
+        "faces_finished": 2,
+        "stiffener_column_spacing_m": 4.0,
+        "stiffener_column_section_m": [
+          0.2,
+          0.2
+        ]
+      },
+      "revision_note": "Boundary wall height increased from 2.0 m to 2.5 m along the full 400 m length, at the Employer's request. Foundation detail unchanged; design consultant to confirm adequacy."
+    }
+  ],
+  "variation_instruction": {
+    "ref": "VI-017",
+    "date": "2026-11-02",
+    "issued_by": "Engineer",
+    "text": "Raise the boundary wall from 2.0 m to 2.5 m along 400 m of the community, as shown on Drawing L-201 Revision C. Submit your assessment of cost and time impact."
+  },
+  "contractor_pvr": {
+    "ref": "PVR-023",
+    "date": "2026-11-04",
+    "contractor": "Delta Build Contracting LLC",
+    "subject": "Boundary wall height increase, VI-017",
+    "text": "Further to VI-017 we submit our potential variation for raising the boundary wall from 2.0 m to 2.5 m along 400 m. Our quotation and extension of time request are below.",
+    "claimed_lines": [
+      {
+        "description": "Additional blockwork, 200 mm",
+        "unit": "m2",
+        "quantity": 200,
+        "rate_aed": 125
+      },
+      {
+        "description": "Additional plaster, both faces",
+        "unit": "m2",
+        "quantity": 400,
+        "rate_aed": 40
+      },
+      {
+        "description": "Additional external paint",
+        "unit": "m2",
+        "quantity": 400,
+        "rate_aed": 28
+      },
+      {
+        "description": "Additional stiffener column concrete",
+        "unit": "m3",
+        "quantity": 2.02,
+        "rate_aed": 1800
+      }
+    ],
+    "claimed_preliminaries_percent": 10,
+    "claimed_total_aed": 61419.6,
+    "claimed_extension_working_days": 21
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "contract_ref": "ANG-P2-C01",
+  "clauses": [
+    {
+      "clause": "1.1",
+      "title": "Definitions",
+      "text": "\"Employer\" means the Developer. \"Engineer\" means the person appointed by the Employer to administer the Contract. \"Variation\" means any change to the Works instructed by the Engineer under Clause 13."
+    },
+    {
+      "clause": "4.1",
+      "title": "Scope of the Works",
+      "text": "The Works comprise roads, utilities, landscaping and a boundary wall as shown on the Drawings listed in Appendix A. The boundary wall shall be 2.0 m high above finished ground level as shown on Drawing L-201 Revision B. Structural design of the Works is the responsibility of the Employer's design consultant."
+    },
+    {
+      "clause": "4.12",
+      "title": "Unforeseeable Physical Conditions",
+      "text": "Where the Contractor encounters adverse physical conditions which could not reasonably have been foreseen, the Contractor shall give notice to the Engineer as soon as practicable."
+    },
+    {
+      "clause": "8.4",
+      "title": "Extension of Time for Completion",
+      "text": "The Contractor shall be entitled to an extension of the Time for Completion only if, and to the extent that, completion is or will be delayed by a Variation. The extension shall be assessed on the current programme by reference to the critical path, taking account of available float."
+    },
+    {
+      "clause": "8.5",
+      "title": "Time-Related Costs",
+      "text": "Where an extension of time is granted, the Contractor shall be paid time-related costs at the rate of AED 2,500 per working day of extension granted. No other time-related costs shall be payable."
+    },
+    {
+      "clause": "8.6",
+      "title": "Acceleration",
+      "text": "The Employer may instruct the Contractor to accelerate the Works by adding resources. The Contractor shall be paid the additional crew costs in Appendix D: AED 3,000 mobilisation per additional crew per activity and AED 1,800 per crew per working day. No more than one additional crew may work on any single activity due to site access constraints."
+    },
+    {
+      "clause": "13.1",
+      "title": "Right to Vary",
+      "text": "The Engineer may instruct Variations at any time before completion, including by issuing a revised drawing. Each Variation shall be confirmed by a Variation Instruction."
+    },
+    {
+      "clause": "13.3",
+      "title": "Valuation of Variations",
+      "text": "Variations shall be valued by measurement of the change in quantities, using the rates in the Bill of Quantities where the work is of similar character and executed under similar conditions. New rates shall be agreed only where no similar item exists."
+    },
+    {
+      "clause": "13.4",
+      "title": "Preliminaries and Overheads",
+      "text": "The rates in the Bill of Quantities are deemed to include all preliminaries, overheads and profit. No percentage addition for preliminaries or overheads shall be made to the valuation of any Variation."
+    },
+    {
+      "clause": "14.2",
+      "title": "Lump Sum Items",
+      "text": "Items marked LS in the Bill of Quantities are lump sums and shall not be remeasured."
+    },
+    {
+      "clause": "20.1",
+      "title": "Contractor's Claims and Notices",
+      "text": "If the Contractor considers itself entitled to additional payment or extension of time, it shall give notice to the Engineer within 28 days of becoming aware of the event, describing the event and the entitlement claimed."
+    }
+  ]
+}

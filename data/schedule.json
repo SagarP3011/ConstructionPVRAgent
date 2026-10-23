@@ -1,0 +1,547 @@
+{
+  "units": "working days",
+  "note": "Simplified programme export (stands in for a P6 XER file). Relationship types FS and SS with lag in working days. Durations are baseline programme durations.",
+  "activities": [
+    {
+      "id": "A010",
+      "name": "Site mobilisation",
+      "wbs": "Preliminaries",
+      "zone": "GENERAL",
+      "discipline": "general",
+      "duration": 5,
+      "predecessors": [],
+      "boq_codes": [
+        "P-01-010"
+      ],
+      "status": "complete"
+    },
+    {
+      "id": "A020",
+      "name": "Setting out and survey",
+      "wbs": "Preliminaries",
+      "zone": "GENERAL",
+      "discipline": "general",
+      "duration": 3,
+      "predecessors": [
+        {
+          "id": "A010",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "P-01-030"
+      ],
+      "status": "complete"
+    },
+    {
+      "id": "A100",
+      "name": "Road excavation",
+      "wbs": "Roads",
+      "zone": "ROADS",
+      "discipline": "civil",
+      "duration": 16,
+      "predecessors": [
+        {
+          "id": "A020",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "R-02-010"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A110",
+      "name": "Subgrade preparation",
+      "wbs": "Roads",
+      "zone": "ROADS",
+      "discipline": "civil",
+      "duration": 8,
+      "predecessors": [
+        {
+          "id": "A100",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "R-02-020"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A120",
+      "name": "Sub-base and base course",
+      "wbs": "Roads",
+      "zone": "ROADS",
+      "discipline": "civil",
+      "duration": 10,
+      "predecessors": [
+        {
+          "id": "A110",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "R-02-030",
+        "R-02-040"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A130",
+      "name": "Kerbs and channels",
+      "wbs": "Roads",
+      "zone": "ROADS",
+      "discipline": "civil",
+      "duration": 8,
+      "predecessors": [
+        {
+          "id": "A120",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "R-02-050"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A140",
+      "name": "Asphalt binder course",
+      "wbs": "Roads",
+      "zone": "ROADS",
+      "discipline": "civil",
+      "duration": 5,
+      "predecessors": [
+        {
+          "id": "A130",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "R-02-060"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A150",
+      "name": "Asphalt wearing course",
+      "wbs": "Roads",
+      "zone": "ROADS",
+      "discipline": "civil",
+      "duration": 4,
+      "predecessors": [
+        {
+          "id": "A140",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "R-02-070"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A160",
+      "name": "Road markings and signage",
+      "wbs": "Roads",
+      "zone": "ROADS",
+      "discipline": "civil",
+      "duration": 3,
+      "predecessors": [
+        {
+          "id": "A150",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "R-02-080",
+        "R-02-090"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A200",
+      "name": "Utility trenching",
+      "wbs": "Utilities",
+      "zone": "UTIL",
+      "discipline": "mep",
+      "duration": 10,
+      "predecessors": [
+        {
+          "id": "A020",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "U-03-010"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A210",
+      "name": "Storm water drainage",
+      "wbs": "Utilities",
+      "zone": "UTIL",
+      "discipline": "mep",
+      "duration": 15,
+      "predecessors": [
+        {
+          "id": "A200",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "U-03-020",
+        "U-03-030",
+        "U-03-040"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A220",
+      "name": "Irrigation mains",
+      "wbs": "Utilities",
+      "zone": "UTIL",
+      "discipline": "mep",
+      "duration": 12,
+      "predecessors": [
+        {
+          "id": "A210",
+          "type": "SS",
+          "lag": 5
+        }
+      ],
+      "boq_codes": [
+        "U-03-050",
+        "U-03-060"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A230",
+      "name": "Street lighting ducts and cabling",
+      "wbs": "Utilities",
+      "zone": "UTIL",
+      "discipline": "electrical",
+      "duration": 10,
+      "predecessors": [
+        {
+          "id": "A210",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "U-03-070",
+        "U-03-080"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A240",
+      "name": "Street lighting poles and fixtures",
+      "wbs": "Utilities",
+      "zone": "UTIL",
+      "discipline": "electrical",
+      "duration": 8,
+      "predecessors": [
+        {
+          "id": "A230",
+          "type": "FS",
+          "lag": 0
+        },
+        {
+          "id": "A150",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "U-03-090"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A300",
+      "name": "Boundary wall foundation excavation",
+      "wbs": "Boundary Wall",
+      "zone": "WALL",
+      "discipline": "civil",
+      "duration": 4,
+      "predecessors": [
+        {
+          "id": "A020",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "B-04-005"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A310",
+      "name": "Boundary wall strip footing",
+      "wbs": "Boundary Wall",
+      "zone": "WALL",
+      "discipline": "civil",
+      "duration": 4,
+      "predecessors": [
+        {
+          "id": "A300",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "B-04-008"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A320",
+      "name": "Boundary wall blockwork and stiffener columns",
+      "wbs": "Boundary Wall",
+      "zone": "WALL",
+      "discipline": "civil",
+      "duration": 20,
+      "predecessors": [
+        {
+          "id": "A310",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "B-04-010",
+        "B-04-015"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A330",
+      "name": "Boundary wall plaster, both faces",
+      "wbs": "Boundary Wall",
+      "zone": "WALL",
+      "discipline": "finishes",
+      "duration": 20,
+      "predecessors": [
+        {
+          "id": "A320",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "B-04-020"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A335",
+      "name": "Boundary wall precast coping",
+      "wbs": "Boundary Wall",
+      "zone": "WALL",
+      "discipline": "civil",
+      "duration": 5,
+      "predecessors": [
+        {
+          "id": "A330",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "B-04-030"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A340",
+      "name": "Boundary wall external paint",
+      "wbs": "Boundary Wall",
+      "zone": "WALL",
+      "discipline": "finishes",
+      "duration": 10,
+      "predecessors": [
+        {
+          "id": "A335",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "B-04-040"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A400",
+      "name": "Topsoil and soft landscape preparation",
+      "wbs": "Landscape",
+      "zone": "LAND",
+      "discipline": "landscape",
+      "duration": 10,
+      "predecessors": [
+        {
+          "id": "A220",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "L-05-010"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A410",
+      "name": "Planting and turf",
+      "wbs": "Landscape",
+      "zone": "LAND",
+      "discipline": "landscape",
+      "duration": 15,
+      "predecessors": [
+        {
+          "id": "A400",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "L-05-020",
+        "L-05-030",
+        "L-05-040"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A420",
+      "name": "Hardscape paving",
+      "wbs": "Landscape",
+      "zone": "LAND",
+      "discipline": "landscape",
+      "duration": 12,
+      "predecessors": [
+        {
+          "id": "A130",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "L-05-050",
+        "L-05-060"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A430",
+      "name": "Site furniture",
+      "wbs": "Landscape",
+      "zone": "LAND",
+      "discipline": "landscape",
+      "duration": 5,
+      "predecessors": [
+        {
+          "id": "A420",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "L-05-070",
+        "L-05-080"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A900",
+      "name": "Testing and commissioning",
+      "wbs": "Completion",
+      "zone": "CLOSE",
+      "discipline": "general",
+      "duration": 10,
+      "predecessors": [
+        {
+          "id": "A240",
+          "type": "FS",
+          "lag": 0
+        },
+        {
+          "id": "A410",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "T-06-010"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A910",
+      "name": "Snagging and de-snagging",
+      "wbs": "Completion",
+      "zone": "CLOSE",
+      "discipline": "general",
+      "duration": 10,
+      "predecessors": [
+        {
+          "id": "A900",
+          "type": "FS",
+          "lag": 0
+        },
+        {
+          "id": "A160",
+          "type": "FS",
+          "lag": 0
+        },
+        {
+          "id": "A430",
+          "type": "FS",
+          "lag": 0
+        },
+        {
+          "id": "A340",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [
+        "T-06-020"
+      ],
+      "status": "not_started"
+    },
+    {
+      "id": "A920",
+      "name": "Practical completion",
+      "wbs": "Completion",
+      "zone": "CLOSE",
+      "discipline": "general",
+      "duration": 0,
+      "predecessors": [
+        {
+          "id": "A910",
+          "type": "FS",
+          "lag": 0
+        }
+      ],
+      "boq_codes": [],
+      "status": "milestone"
+    }
+  ]
+}

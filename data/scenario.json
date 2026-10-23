@@ -1,0 +1,78 @@
+{
+  "change_types": [
+    {
+      "id": "wall_height",
+      "title": "Raise the boundary wall",
+      "element": "boundary_wall",
+      "parameters": [
+        {
+          "name": "new_height_m",
+          "label": "New wall height (m)",
+          "default": 2.5,
+          "min": 2.1,
+          "max": 3.0,
+          "step": 0.1
+        }
+      ],
+      "fixed": {
+        "current_height_m": 2.0,
+        "length_m": 400
+      },
+      "has_contractor_claim_at_default": true,
+      "default_instruction": "Raise the boundary wall from 2.0 m to {new_height_m} m along 400 m of the community, as shown on Drawing L-201 Revision C.",
+      "modes": [
+        "contractor_pvr",
+        "internal_what_if"
+      ]
+    },
+    {
+      "id": "road_widening",
+      "title": "Widen the internal road",
+      "element": "internal_road",
+      "parameters": [
+        {
+          "name": "widen_by_m",
+          "label": "Extra road width (m)",
+          "default": 1.0,
+          "min": 0.5,
+          "max": 2.0,
+          "step": 0.5
+        },
+        {
+          "name": "length_m",
+          "label": "Length to widen (m)",
+          "default": 600,
+          "min": 100,
+          "max": 1500,
+          "step": 100
+        }
+      ],
+      "has_contractor_claim_at_default": false,
+      "default_instruction": "Widen the internal road by {widen_by_m} m over {length_m} m to add a drop-off lane.",
+      "modes": [
+        "internal_what_if"
+      ]
+    },
+    {
+      "id": "paving_area",
+      "title": "Add paving area",
+      "element": "hardscape",
+      "parameters": [
+        {
+          "name": "added_area_m2",
+          "label": "Extra interlocking paving (m2)",
+          "default": 400,
+          "min": 100,
+          "max": 1500,
+          "step": 50
+        }
+      ],
+      "has_contractor_claim_at_default": false,
+      "default_instruction": "Add {added_area_m2} m2 of interlocking paving to extend the community plaza.",
+      "modes": [
+        "internal_what_if"
+      ]
+    }
+  ],
+  "note": "The contractor claim PVR-023 applies only to the wall change at its default value (2.5 m) in contractor_pvr mode. All other runs are internal what-if assessments."
+}

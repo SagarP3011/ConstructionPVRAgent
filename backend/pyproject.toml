@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pvr-agent-room"
+version = "0.1.0"
+description = "PVR Agent Room: multi-agent proof of concept for assessing a potential variation request (PVR)."
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.162.0",
+    "uvicorn[standard]==0.54.0",
+    "pydantic==2.14.1",
+    "python-dotenv==1.2.4",
+    "openai==3.37.0",
+    "rank-bm25==0.2.2",
+    "networkx==3.7",
+    "sse-starlette==3.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+    "httpx==0.28.1",
+]
+
+[project.scripts]
+pvr = "pvr.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["pvr*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "live: needs a real OPENAI_API_KEY and calls the OpenAI API",
+]
+addopts = "-ra"

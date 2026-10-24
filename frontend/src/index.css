@@ -1,0 +1,40 @@
+@import "tailwindcss";
+@import "./theme/tokens.css";
+
+/* Expose the theme tokens to Tailwind utilities (bg-surface, text-accent, ...). */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-tint: var(--accent-tint);
+  --color-alert: var(--alert);
+  --radius-card: var(--radius);
+  --font-sans: var(--font);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  color: var(--accent);
+}

@@ -1,0 +1,25 @@
+/* Theme tokens inspired by Aldar's brand guidelines (SPEC section 12.1).
+   Blues accent set only. No logo. */
+:root {
+  --bg: #FFFFFF;               /* Aldar White */
+  --surface: #F7F6F4;          /* light tint of Warm Grey */
+  --surface-2: #EFECE8;
+  --border: #D7D2CB;           /* Warm Grey */
+  --text: #2C2A29;             /* Aldar Black */
+  --text-muted: #6E6A66;
+  --accent: #003057;           /* Night Shade */
+  --accent-2: #69B3E7;         /* Sky */
+  --accent-tint: #E6F1FA;      /* light Sky tint for highlights */
+  --alert: #E35205;            /* Terracotta: only failed verification, budget overrun, buffer breach */
+  --radius: 10px;
+  --font: "Poppins", system-ui, sans-serif;
+
+  /* Agent identity colours (always paired with an icon and a label). */
+  --agent-moderator: #003057;
+  --agent-intake: #69B3E7;
+  --agent-contract: #2C2A29;
+  --agent-cost: #1F5C8B;
+  --agent-time: #4A9BD4;
+  --agent-commercial: #8A847E;
+  --agent-verifier: #3D3A38;
+}

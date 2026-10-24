@@ -1,6 +1,24 @@
+# Secrets
 .env
+
+# Python
 .venv/
-node_modules/
-runs/
 __pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# Build output
 dist/
+build/
+*.tsbuildinfo
+
+# Generated runs
+runs/
+
+# OS
+.DS_Store
+Thumbs.db

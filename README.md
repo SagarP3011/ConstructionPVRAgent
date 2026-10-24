@@ -54,6 +54,19 @@ Press Ctrl+C in the dev window to stop both servers.
 - `scripts/`: PowerShell equivalents of the Makefile targets.
 - `runs/`: generated run folders (git-ignored). `fixtures/`: recorded demo runs for replay.
 
+## Console commands (from `backend\`)
+
+| Command | What it does |
+|---|---|
+| `.venv\Scripts\python.exe -m pvr.cli engines` | Deterministic assessment of the three default changes (no LLM) |
+| `.venv\Scripts\python.exe -m pvr.cli agent cost --change wall_height` | One agent alone, live |
+| `.venv\Scripts\python.exe -m pvr.cli run --change wall_height` | Full seven-agent run; pauses for your approval, then executes the approved actions |
+
+`run` also takes `--param name=value`, `--mode internal_what_if|contractor_pvr`, and for unattended use
+`--approve OPT-... --approver "Name" --role "Role"` or `--reject "reason"`. Each run writes its full event trace to
+`runs/<run_id>/events.jsonl`; approved actions write their files to `runs/<run_id>/outputs/`.
+
 ## Build status
 
-Built in phases (SPEC section 16). Phase 0 (scaffold) is in place: health check, themed header, empty layout.
+Built in phases (SPEC section 16). Phases 0 to 3 are in place: scaffold, deterministic engines, tools and facts,
+and the full multi-agent orchestration in the console.

@@ -337,6 +337,8 @@ class AgentMessage(BaseModel):
     stance: str | None = None
     proposals: list[str] = Field(default_factory=list)
     verification: Verification = Field(default_factory=Verification)
+    corrects: str | None = None  # id of the message this one replaces after a failed verification
+    superseded_by: str | None = None
     timestamp: str
 
 

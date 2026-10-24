@@ -9,7 +9,7 @@ from typing import Any
 import pytest
 
 from conftest import make_session
-from pvr.tools.facts import FactRegistry, infer_unit
+from pvr.tools.facts import FactRegistry, infer_unit, units_match
 from pvr.tools.registry import REGISTRY, clean_schema
 
 ENGINE_TOOLS = [
@@ -103,7 +103,7 @@ def test_contractor_claim_tool_only_in_contractor_mode() -> None:
     ],
 )
 def test_invalid_inputs_return_errors(tool: str, args: dict, message: str) -> None:
-    session = make_session("wall_height")
+    session = make_session("wall_height", mode="contractor_pvr")
     outcome = REGISTRY.dispatch(session, tool, json.dumps(args), agent="cost")
     assert not outcome.ok
     assert message in outcome.error
@@ -167,10 +167,26 @@ def test_fact_units_and_lookup() -> None:
 def test_infer_unit_rules() -> None:
     assert infer_unit("total_cost_aed", {}) == "AED"
     assert infer_unit("delay_working_days", {}) == "wd"
-    assert infer_unit("calendar_days", {}) == "days"
+    assert infer_unit("calendar_days", {}) == "cd"
     assert infer_unit("delta", {"unit": "m3"}) == "m3"
     assert infer_unit("value", {"label": "New wall height (m)"}) == "m"
     assert infer_unit("score", {}) == ""
+
+
+def test_units_match() -> None:
+    assert units_match("AED/m2", "AED") and units_match("aed per working day", "AED")
+    assert units_match("working days", "wd") and units_match("days", "wd") and units_match("days", "cd")
+    assert not units_match("wd", "cd") and not units_match("calendar days", "wd")
+    assert units_match("", "date") and units_match("", "AED")  # no unit stated: nothing to contradict
+    assert not units_match("m", "m2") and not units_match("AED", "wd")
+    assert units_match("square metres", "m2") and units_match("anything", "")
+
+
+def test_check_notice_only_with_a_contractor_claim() -> None:
+    what_if = make_session("paving_area")
+    outcome = REGISTRY.dispatch(what_if, "check_notice", {"event_date": "2026-11-02", "notice_date": "2026-11-04"},
+                                agent="intake")
+    assert not outcome.ok and "not available in this run" in outcome.error
 
 
 def test_check_claim() -> None:
@@ -200,3 +216,19 @@ def test_post_message_records_envelope() -> None:
     bad_intent = REGISTRY.dispatch(session, "post_message", {"to": "all", "intent": "SHOUT", "content": "x"},
                                    agent="cost")
     assert not bad_intent.ok
+
+
+def test_post_message_guards() -> None:
+    session = make_session("paving_area")
+
+    def post(agent: str, **fields: object) -> str:
+        args = {"to": "all", "intent": "ASSESS", "content": "x", **fields}
+        outcome = REGISTRY.dispatch(session, "post_message", args, agent=agent)
+        return "" if outcome.ok else outcome.error
+
+    assert post("cost", claims=None, proposals=None, stance="") == ""
+    assert "option ids" in post("contract", proposals=["ACT-001"])
+    assert "stance must be an option id" in post("contract", stance="create_task")
+    assert "Only the verifier" in post("commercial", intent="VERIFY")
+    assert "Only the moderator" in post("cost", intent="SUMMARISE")
+    assert post("verifier", intent="VERIFY", to="cost") == ""

@@ -4,6 +4,7 @@ Commands:
     check-llm   Confirm the OpenAI key works and OPENAI_MODEL supports tool calling.
     engines     Deterministic assessment for the three default changes (no LLM).
     agent       Run one agent alone, live (for example: agent cost --change wall_height).
+    run         Full multi-agent run in the console, with an approval prompt.
 """
 
 from __future__ import annotations
@@ -129,6 +130,86 @@ def cmd_agent(args: argparse.Namespace) -> int:
     return 0 if turn.status == "posted" else 1
 
 
+def _ask(prompt: str, default: str = "") -> str:
+    answer = input(f"{prompt}{f' [{default}]' if default else ''}: ").strip()
+    return answer or default
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    """Full multi-agent run in the console. Pauses for approval, then executes the approved actions."""
+    from pvr.console import ConsoleView
+    from pvr.data_loader import get_data
+    from pvr.engines import options as options_engine
+    from pvr.engines.change import make_context
+    from pvr.engines.common import EngineError
+    from pvr.llm.client import LLMError, OpenAILLM
+    from pvr.orchestrator.approvals import ApprovalError
+    from pvr.orchestrator.orchestrator import start_run
+    from pvr.report import aed, day
+
+    settings = load_settings()
+    data = get_data()
+    try:
+        mode = args.mode or data.change_type(args.change).modes[0]
+        ctx = make_context(data, args.change, _parse_params(args.param), mode=mode)
+        llm = OpenAILLM(settings)
+    except (EngineError, KeyError, LLMError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 2
+
+    print(f"PVR Agent Room: {ctx.change_type} {ctx.parameters} ({ctx.mode}); "
+          f"models {settings.openai_model} / {settings.light_model}")
+    orch, sink = start_run(ctx, data, settings, llm, sinks=[ConsoleView(show_tools=not args.quiet)])
+    try:
+        request = orch.run_until_approval()
+        s = orch.session
+        print("\n=== Decision needed ===")
+        for i, option_id in enumerate(request["options"], 1):
+            o = options_engine.evaluate_option(s.ctx, s.data, options_engine.parse_option_id(option_id, s.data))
+            backers = [a for a, st in request["stances"].items() if st == option_id]
+            print(f"  {i}. {option_id}: delay {o.delay_working_days} wd, completion {day(o.completion_date)}, "
+                  f"total AED {aed(o.total_cost_aed)}, buffer left {o.time_buffer_remaining_days} wd, "
+                  f"contingency left AED {aed(o.contingency_remaining_aed)}"
+                  + (f"  (supported by {', '.join(backers)})" if backers else ""))
+        print("  Actions proposed:")
+        for a in request["pending_actions"]:
+            title = a["payload"].get("title") or ", ".join(a["payload"].get("recipients", []))
+            print(f"    {a['action_id']} {a['type']}{f' ({title})' if title else ''}: {a['reason']}")
+
+        if args.reject:
+            orch.reject(args.approver or "Console user", args.role or "Reviewer", args.reject)
+            print("Rejected. Nothing was executed.")
+            return 0
+        if args.approve:
+            option, name, role = args.approve, args.approver, args.role
+            actions = [a["action_id"] for a in request["pending_actions"]] if args.actions == "all" \
+                else [x for x in (args.actions or "").split(",") if x]
+        else:
+            choice = _ask("Choose an option number, or r to reject", "1")
+            name = _ask("Your name")
+            role = _ask("Your role")
+            if choice.lower() == "r":
+                orch.reject(name, role, _ask("Reason for rejecting"))
+                print("Rejected. Nothing was executed.")
+                return 0
+            option = request["options"][int(choice) - 1]
+            all_ids = ",".join(a["action_id"] for a in request["pending_actions"])
+            actions = [x.strip() for x in _ask("Actions to approve (comma separated)", all_ids).split(",") if x.strip()]
+        executed = orch.approve(option, actions, name or "", role or "")
+        print(f"\nApproved {option} by {name} ({role}). Executed {len(executed)} action(s).")
+        print(f"Outputs: {s.run_dir / 'outputs'}")
+    except (ApprovalError, ValueError, IndexError) as exc:
+        print(f"Approval error: {exc}", file=sys.stderr)
+        return 1
+    finally:
+        sink.close()
+        usage = [e.payload for e in orch.session.bus.of_type("llm.call")]
+        print(f"LLM calls {len(usage)}; tokens {sum(u['prompt_tokens'] for u in usage)} in / "
+              f"{sum(u['completion_tokens'] for u in usage)} out")
+        print(f"Trace: {sink.path}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Build the argument parser with all subcommands."""
     parser = argparse.ArgumentParser(prog="pvr", description="PVR Agent Room command line tools.")
@@ -152,6 +233,20 @@ def build_parser() -> argparse.ArgumentParser:
     agent.add_argument("--mode", choices=["internal_what_if", "contractor_pvr"],
                        help="Mode (default: the first mode of the change type)")
     agent.set_defaults(func=cmd_agent)
+
+    run = sub.add_parser("run", help="Full multi-agent run in the console, with an approval prompt.")
+    run.add_argument("--change", required=True, help="Change type, for example wall_height")
+    run.add_argument("--param", action="append", default=[], metavar="NAME=VALUE",
+                     help="Parameter value, repeatable (defaults otherwise)")
+    run.add_argument("--mode", choices=["internal_what_if", "contractor_pvr"],
+                     help="Mode (default: the first mode of the change type)")
+    run.add_argument("--approve", metavar="OPTION_ID", help="Approve this option without prompting")
+    run.add_argument("--actions", default="all", help="With --approve: 'all' or comma-separated action ids")
+    run.add_argument("--reject", metavar="REASON", help="Reject without prompting")
+    run.add_argument("--approver", help="Approver name (with --approve or --reject)")
+    run.add_argument("--role", help="Approver role (with --approve or --reject)")
+    run.add_argument("--quiet", action="store_true", help="Do not print tool calls")
+    run.set_defaults(func=cmd_run)
     return parser
 
 

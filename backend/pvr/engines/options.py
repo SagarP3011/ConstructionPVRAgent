@@ -36,6 +36,8 @@ class OptionResult(BaseModel):
     total_cost_aed: float
     time_buffer_remaining_days: int
     contingency_remaining_aed: float
+    cost_above_no_crews_aed: float
+    delay_saved_vs_no_crews_days: int
     critical_path: list[str]
 
 
@@ -132,12 +134,18 @@ def evaluate_option(ctx: RunContext, data: ProjectData, extra_crews_on: list[str
             crew_cost_aed=r2(crew.mobilisation_aed_per_crew_per_activity + crew.day_rate_aed * after),
         ))
 
+    contract_completion = data.project.contract_completion_working_day
+    per_day = data.commercial.time_related_cost_per_working_day_aed
     cpm = run_cpm(data, durations)
-    delay = max(0, cpm.completion_working_day - data.project.contract_completion_working_day)
+    delay = max(0, cpm.completion_working_day - contract_completion)
     direct = price_change(ctx, data).direct_cost_aed
     acceleration = r2(sum(a.crew_cost_aed for a in accelerated))
-    time_related = r2(data.commercial.time_related_cost_per_working_day_aed * delay)
+    time_related = r2(per_day * delay)
     total = r2(direct + acceleration + time_related)
+    # The same change with no extra crews, for comparison.
+    unaccelerated = run_cpm(data, added_duration(ctx, data).new_durations())
+    delay_no_crews = max(0, unaccelerated.completion_working_day - contract_completion)
+    total_no_crews = r2(direct + per_day * delay_no_crews)
     return OptionResult(
         option_id=option_id(extra_crews_on, data),
         extra_crews_on=[a.activity_id for a in accelerated],
@@ -151,6 +159,8 @@ def evaluate_option(ctx: RunContext, data: ProjectData, extra_crews_on: list[str
         total_cost_aed=total,
         time_buffer_remaining_days=time_buffer_days(ctx, data) - delay,
         contingency_remaining_aed=r2(contingency_aed(ctx, data) - total),
+        cost_above_no_crews_aed=r2(total - total_no_crews),
+        delay_saved_vs_no_crews_days=delay_no_crews - delay,
         critical_path=cpm.critical_path,
     )
 

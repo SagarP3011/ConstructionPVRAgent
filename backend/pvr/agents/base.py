@@ -17,7 +17,7 @@ from pydantic import BaseModel
 from pvr.agents.roster import PROMPTS_DIR, AgentSpec
 from pvr.llm.client import LLM, LLMError, LLMResponse
 from pvr.models import AgentMessage
-from pvr.orchestrator.context import RunSession
+from pvr.orchestrator.context import RunSession, TurnState, current_turn
 from pvr.tools.registry import REGISTRY, ToolRegistry, ToolSpec
 
 NUDGE_POST = "Please end your turn by calling post_message."
@@ -40,7 +40,14 @@ def system_prompt(spec: AgentSpec, tools: list[ToolSpec]) -> str:
     common = (PROMPTS_DIR / "_common.md").read_text(encoding="utf-8")
     own = spec.prompt_file.read_text(encoding="utf-8")
     tool_lines = "\n".join(f"- `{t.name}`: {t.description}" for t in tools)
-    return own.strip() + "\n\n" + common.replace("{tools}", tool_lines).strip() + "\n"
+    return (f"Agent id: {spec.name}\n\n" + own.strip() + "\n\n"
+            + common.replace("{tools}", tool_lines).strip() + "\n")
+
+
+def agent_of_prompt(messages: list[dict[str, Any]]) -> str:
+    """The agent id a request is for (first line of the system prompt). Used by the FakeLLM router."""
+    first = str(messages[0].get("content", "")).split("\n", 1)[0]
+    return first.removeprefix("Agent id: ").strip()
 
 
 def _format_inbox(messages: list[AgentMessage]) -> str:
@@ -102,16 +109,40 @@ def run_agent_turn(
     inbox: list[AgentMessage] | None = None,
     registry: ToolRegistry = REGISTRY,
     max_steps: int | None = None,
+    depth: int = 0,
 ) -> AgentTurn:
-    """Run one turn of one agent until it posts a message, or fails."""
-    tools = registry.available_for(session, list(spec.tools))
+    """Run one turn of one agent until it posts a message, or fails.
+
+    `depth` 1 is an answer turn for `ask_agent`: the agent cannot ask in turn (depth limit 1).
+    """
+    token = current_turn.set(TurnState(agent=spec.name, depth=depth))
+    try:
+        return _run_turn(session, spec, llm, stage_instruction, blackboard_sections, inbox, registry, max_steps,
+                         depth)
+    finally:
+        current_turn.reset(token)
+
+
+def _run_turn(
+    session: RunSession,
+    spec: AgentSpec,
+    llm: LLM,
+    stage_instruction: str,
+    blackboard_sections: list[str] | None,
+    inbox: list[AgentMessage] | None,
+    registry: ToolRegistry,
+    max_steps: int | None,
+    depth: int,
+) -> AgentTurn:
+    allowed = [t for t in spec.tools if not (depth >= 1 and t == "ask_agent")]
+    tools = registry.available_for(session, allowed)
     tool_names = [t.name for t in tools]
     schemas = [t.openai_schema() for t in tools]
     limit = max_steps or session.settings.agent_max_steps
     model = _model_for(session, spec)
     session.bus.emit("agent.active", {
         "agent": spec.name, "stage": session.stage, "round": session.round, "model": model, "tools": tool_names,
-        "unavailable_tools": [t for t in spec.tools if t not in tool_names],
+        "unavailable_tools": [t for t in spec.tools if t not in tool_names], "answer_turn": depth >= 1,
     })
 
     messages: list[dict[str, Any]] = [
@@ -149,13 +180,13 @@ def run_agent_turn(
         if not resp.tool_calls:
             messages.append({"role": "user", "content": NUDGE_POST})
             return None
-        posted: AgentMessage | None = None
         for tc in resp.tool_calls:
             outcome = registry.dispatch(session, tc.name, tc.arguments, agent=spec.name, allowed=tool_names)
             messages.append({"role": "tool", "tool_call_id": tc.id, "content": outcome.model_content})
-            if tc.name == "post_message" and outcome.ok and posted is None:
-                posted = next(m for m in session.messages if m.message_id == outcome.result["message_id"])
-        return posted
+            if tc.name == "post_message" and outcome.ok:
+                # The turn ends at the first message; later calls in the same step are not executed.
+                return session.message(outcome.result["message_id"])
+        return None
 
     try:
         for _ in range(limit):

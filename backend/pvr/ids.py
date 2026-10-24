@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import secrets
+import threading
 from datetime import datetime, timezone
 
 
@@ -11,10 +12,12 @@ class IdGen:
 
     def __init__(self) -> None:
         self._counters: dict[str, int] = {}
+        self._lock = threading.Lock()
 
     def next(self, prefix: str, width: int = 4) -> str:
-        n = self._counters.get(prefix, 0) + 1
-        self._counters[prefix] = n
+        with self._lock:
+            n = self._counters.get(prefix, 0) + 1
+            self._counters[prefix] = n
         return f"{prefix}-{n:0{width}d}"
 
 

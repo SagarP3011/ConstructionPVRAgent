@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from conftest import fake_settings, make_session
 from pvr.agents.base import run_agent_turn, system_prompt
-from pvr.agents.roster import COST
+from pvr.agents.roster import COST, ROSTER
 from pvr.data_loader import get_data
 from pvr.engines.change import make_context
 from pvr.events.store import read_events
@@ -124,18 +127,27 @@ def test_step_limit_reminder_can_succeed() -> None:
     assert turn.status == "posted" and turn.forced
 
 
-def test_prompt_is_generic_and_lists_allowed_tools() -> None:
+@pytest.mark.parametrize("agent", list(ROSTER))
+def test_prompts_are_generic_and_list_allowed_tools(agent: str) -> None:
+    spec = ROSTER[agent]
     session = make_session("wall_height", mode="contractor_pvr")
-    tools = REGISTRY.available_for(session, list(COST.tools))
-    prompt = system_prompt(COST, tools)
+    tools = REGISTRY.available_for(session, list(spec.tools))
+    prompt = system_prompt(spec, tools)
     for name in [t.name for t in tools]:
         assert f"`{name}`" in prompt
     assert "{tools}" not in prompt
     golden = json.loads((Path(__file__).parents[2] / "tests_golden" / "golden.json").read_text(encoding="utf-8"))
-    banned = {str(c["direct_cost_aed"]).removesuffix(".0") for c in golden["cases"]}
-    banned |= {"B-04-010", "R-02-010", "L-05-050", "wall", "road", "paving", "OPT-A320", "OPT-NONE"}
+    banned: set[str] = set()
+    for case in golden["cases"]:
+        banned |= {f"{case['direct_cost_aed']:,.0f}", str(case["direct_cost_aed"]).removesuffix(".0")}
+        banned |= {o["completion_date"] for o in case["options_all"]} | set(case["pareto_option_ids"])
+    banned |= {"B-04-", "R-02-", "L-05-", "A320", "A120", "A420", "wall", "road", "paving", "kerb", "coping",
+               "PVR-023", "VI-017", "L-201", "3 Feb", "12 Feb"}
+    lowered = prompt.lower()
     for text_ in banned:
-        assert text_ not in prompt, text_
+        assert text_.lower() not in lowered, text_
+    # No fixed sequence of tool calls: tools are listed, never ordered as steps.
+    assert not re.search(r"(first|then|next|finally)[^.\n]{0,40}`\w+`", lowered)
 
 
 def test_single_agent_run_writes_trace(tmp_path: Path) -> None:

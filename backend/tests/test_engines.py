@@ -115,6 +115,9 @@ def test_all_options(case: dict) -> None:
         for field in OPTION_FIELDS:
             assert getattr(got, field) == approx(expected[field]), (expected["option_id"], field)
         assert got.completion_date.isoformat() == expected["completion_date"], expected["option_id"]
+        none = case["options_all"][0]
+        assert got.cost_above_no_crews_aed == approx(expected["total_cost_aed"] - none["total_cost_aed"])
+        assert got.delay_saved_vs_no_crews_days == none["delay_working_days"] - expected["delay_working_days"]
 
 
 @pytest.mark.parametrize("case", CASES, ids=case_id)

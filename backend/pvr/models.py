@@ -8,7 +8,7 @@ engines in `pvr/engines/`.
 from __future__ import annotations
 
 from datetime import date
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -297,3 +297,55 @@ class RunContext(BaseModel):
     parameters: dict[str, float]
     mode: Mode = "internal_what_if"
     overrides: Overrides = Field(default_factory=Overrides)
+
+
+# --- agent messages (SPEC 10.1) -----------------------------------------------------
+
+Intent = Literal["ASSESS", "PROPOSE", "CHALLENGE", "AGREE", "ASK", "ANSWER", "VERIFY", "SUMMARISE"]
+
+
+class Claim(BaseModel):
+    """A number (or date) stated in a message, with the fact that supports it."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    label: str
+    value: float | str
+    unit: str = ""
+    fact_id: str
+
+
+class Verification(BaseModel):
+    status: Literal["pass", "fail", "pending"] = "pending"
+    issues: list[str] = Field(default_factory=list)
+
+
+class AgentMessage(BaseModel):
+    """Message envelope. Serialised with `from` as the sender key."""
+
+    model_config = ConfigDict(populate_by_name=True, serialize_by_alias=True)
+
+    message_id: str
+    run_id: str
+    stage: str
+    round: int = 0
+    from_agent: str = Field(alias="from")
+    to: str
+    intent: Intent
+    content: str
+    claims: list[Claim] = Field(default_factory=list)
+    stance: str | None = None
+    proposals: list[str] = Field(default_factory=list)
+    verification: Verification = Field(default_factory=Verification)
+    timestamp: str
+
+
+# --- events (SPEC 11.2) ------------------------------------------------------------------
+
+
+class Event(BaseModel):
+    event_id: str
+    run_id: str
+    type: str
+    ts: str
+    payload: dict[str, Any] = Field(default_factory=dict)

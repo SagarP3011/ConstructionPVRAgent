@@ -3,6 +3,7 @@
 Commands:
     check-llm   Confirm the OpenAI key works and OPENAI_MODEL supports tool calling.
     engines     Deterministic assessment for the three default changes (no LLM).
+    agent       Run one agent alone, live (for example: agent cost --change wall_height).
 """
 
 from __future__ import annotations
@@ -73,6 +74,61 @@ def cmd_engines(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_agent(args: argparse.Namespace) -> int:
+    """Run one agent alone, live, and print its tool calls, message and claim check."""
+    from pvr.config import RUNS_DIR
+    from pvr.data_loader import get_data
+    from pvr.engines.change import make_context
+    from pvr.engines.common import EngineError
+    from pvr.llm.client import LLMError, OpenAILLM
+    from pvr.models import Event
+    from pvr.orchestrator.single_agent import run_single_agent
+
+    settings = load_settings()
+    data = get_data()
+    try:
+        mode = args.mode or data.change_type(args.change).modes[0]
+        ctx = make_context(data, args.change, _parse_params(args.param), mode=mode)
+        llm = OpenAILLM(settings)
+    except (EngineError, KeyError, LLMError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 2
+
+    print(f"Running the {args.name} agent on {ctx.change_type} ({ctx.mode}) with {settings.openai_model} ...")
+
+    def show(event: Event) -> None:
+        p = event.payload
+        if event.type == "tool.called" and p["agent"] != "orchestrator":
+            print(f"  -> {p['tool']}({', '.join(f'{k}={v!r}' for k, v in p['args'].items()) if p['tool'] != 'post_message' else '...'})")
+        elif event.type == "tool.result" and p["agent"] != "orchestrator" and not p["ok"]:
+            print(f"     error: {p['error']}")
+        elif event.type == "llm.call":
+            print(f"  [model {p['model']}: {p['prompt_tokens']} in / {p['completion_tokens']} out tokens, "
+                  f"{p['latency_ms']} ms]")
+
+    session, turn = run_single_agent(args.name, ctx, data, settings, llm, sinks=[show])
+
+    print()
+    if turn.message is None:
+        print(f"Turn failed: {turn.error}")
+    else:
+        m = turn.message
+        print(f"{m.message_id} {m.from_agent} -> {m.to} ({m.intent}), stance {m.stance}")
+        print(m.content)
+        print("Claims:")
+        bad = 0
+        for c in m.claims:
+            problem = session.facts.check_claim(c.fact_id, c.value, c.unit)
+            bad += problem is not None
+            print(f"  {'OK ' if problem is None else 'BAD'} {c.label} = {c.value} {c.unit} [{c.fact_id}]"
+                  + (f"  ({problem})" if problem else ""))
+        print(f"Claims checked against the fact registry: {len(m.claims) - bad} ok, {bad} with problems")
+    print(f"Steps {turn.steps}{' (forced)' if turn.forced else ''}; tokens {turn.prompt_tokens} in / "
+          f"{turn.completion_tokens} out; facts registered {len(session.facts)}")
+    print(f"Trace: {RUNS_DIR / session.run_id / 'events.jsonl'}")
+    return 0 if turn.status == "posted" else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Build the argument parser with all subcommands."""
     parser = argparse.ArgumentParser(prog="pvr", description="PVR Agent Room command line tools.")
@@ -87,6 +143,15 @@ def build_parser() -> argparse.ArgumentParser:
     engines.add_argument("--mode", default="internal_what_if", choices=["internal_what_if", "contractor_pvr"],
                          help="Mode (with --change)")
     engines.set_defaults(func=cmd_engines)
+
+    agent = sub.add_parser("agent", help="Run one agent alone, live, with earlier stages pre-filled from engines.")
+    agent.add_argument("name", help="Agent name, for example cost")
+    agent.add_argument("--change", required=True, help="Change type, for example wall_height")
+    agent.add_argument("--param", action="append", default=[], metavar="NAME=VALUE",
+                       help="Parameter value, repeatable (defaults otherwise)")
+    agent.add_argument("--mode", choices=["internal_what_if", "contractor_pvr"],
+                       help="Mode (default: the first mode of the change type)")
+    agent.set_defaults(func=cmd_agent)
     return parser
 
 

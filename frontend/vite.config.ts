@@ -15,6 +15,8 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    // Worker threads start faster than forked processes on Windows; forks timed out on a slow machine.
+    pool: "threads",
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
   },

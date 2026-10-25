@@ -224,7 +224,7 @@ def cmd_save_fixture(args: argparse.Namespace) -> int:
     from pvr.events.store import read_events, save_fixture
 
     try:
-        target = save_fixture(args.run_id)
+        target = save_fixture(args.run_id, name=args.name)
     except (FileNotFoundError, ValueError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
@@ -280,6 +280,8 @@ def build_parser() -> argparse.ArgumentParser:
     fixture = sub.add_parser("save-fixture", help="Save a completed, approved run as the replay fixture for its "
                                                   "change type.")
     fixture.add_argument("run_id", help="Run id, for example R-20261025-101500-a1b2")
+    fixture.add_argument("--name", help="Save as demo_run_<name> (for example wall_3m) instead of replacing the "
+                                        "default demo run of the change type")
     fixture.set_defaults(func=cmd_save_fixture)
     return parser
 

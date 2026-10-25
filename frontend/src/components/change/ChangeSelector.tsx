@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { api, type ChangeType, type StartRunBody, type StoredRun } from "../../api/client";
+import { api, type ChangeType, type Interpretation, type StartRunBody, type StoredRun } from "../../api/client";
 import type { Mode } from "../../api/events";
 import { CHANGE_LABEL, fillTemplate, formatDate, formatParameter } from "../../format";
 import { EmptyState, ErrorState, LoadingState, Panel } from "../layout/Panel";
+import { FreeTextRequest } from "./FreeTextRequest";
 
 const CARD_TEXT: Record<string, string> = {
   wall_height: "Higher wall on a chain with some float: a real trade-off between cost, time and contingency.",
@@ -31,6 +32,22 @@ function atDefault(ct: ChangeType, values: Record<string, number>): boolean {
   return ct.parameters.every((p) => Math.abs((values[p.name] ?? p.default) - p.default) < 1e-9);
 }
 
+/** A completed saved run of exactly this change, size and mode, with the project's own limits.
+ * Demo runs (fixtures) come first in the list, so they are preferred. */
+function findSavedRun(runs: StoredRun[], ct: ChangeType, values: Record<string, number>, mode: Mode): StoredRun | null {
+  return (
+    runs.find(
+      (r) =>
+        r.change_type === ct.id &&
+        r.mode === mode &&
+        r.state === "completed" &&
+        (r.overrides?.cost_contingency_remaining_aed ?? null) === null &&
+        (r.overrides?.time_buffer_working_days ?? null) === null &&
+        ct.parameters.every((p) => Math.abs((r.parameters?.[p.name] ?? NaN) - (values[p.name] ?? p.default)) < 1e-9),
+    ) ?? null
+  );
+}
+
 /** Start screen: choose a change and its size, then run the agents or replay a saved run. */
 export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelectorProps) {
   const [types, setTypes] = useState<ChangeType[] | null>(null);
@@ -40,12 +57,18 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
   const [mode, setMode] = useState<Mode>("internal_what_if");
   const [starting, setStarting] = useState(false);
   const [runError, setRunError] = useState<string | null>(null);
+  const [savedRuns, setSavedRuns] = useState<StoredRun[] | null>(null);
+  const [savedError, setSavedError] = useState<string | null>(null);
 
   useEffect(() => {
     api
       .changeTypes()
       .then(setTypes)
       .catch((e: unknown) => setLoadError(e instanceof Error ? e.message : "Could not load the change types"));
+    api
+      .listRuns()
+      .then((all) => setSavedRuns(all.filter((r) => r.kind === "full" && ["completed", "rejected"].includes(r.state))))
+      .catch((e: unknown) => setSavedError(e instanceof Error ? e.message : "Could not load saved runs"));
   }, []);
 
   const changeType = types?.find((t) => t.id === selected) ?? null;
@@ -62,6 +85,18 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
     setMode(ct.modes[0] ?? "internal_what_if");
     setRunError(null);
   };
+
+  // A typed request the person confirmed: select that change with the sizes and mode the agent read.
+  const applyReading = (reading: Interpretation) => {
+    const ct = types?.find((t) => t.id === reading.change_type);
+    if (!ct) return;
+    setSelected(ct.id);
+    setValues({ ...defaults(ct), ...reading.parameters });
+    setMode(reading.mode ?? ct.modes[0] ?? "internal_what_if");
+    setRunError(null);
+  };
+
+  const savedMatch = changeType && savedRuns ? findSavedRun(savedRuns, changeType, values, effectiveMode) : null;
 
   const instruction = useMemo(() => {
     if (!changeType) return "";
@@ -87,6 +122,7 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
         <Panel title="Choose a change, and set its size" className="shrink-0">
           {loadError ? <ErrorState message={`Could not reach the backend: ${loadError}`} /> : null}
           {!types && !loadError ? <LoadingState message="Loading the change types" /> : null}
+          {types ? <FreeTextRequest liveAvailable={liveAvailable} onUse={applyReading} /> : null}
           {types ? (
             <div className="grid grid-cols-3 gap-3">
               {types.map((ct) => (
@@ -188,6 +224,16 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
                 >
                   {starting ? "Starting…" : "Run agents"}
                 </button>
+                {savedMatch ? (
+                  <button
+                    type="button"
+                    onClick={() => onReplay(savedMatch.id)}
+                    className="rounded-full border border-accent px-5 py-2.5 text-sm font-semibold text-accent hover:bg-accent hover:text-white"
+                    title="Replays a recorded run of exactly this change: no model calls, no cost"
+                  >
+                    Replay saved run (no cost)
+                  </button>
+                ) : null}
                 <span className="text-xs text-text-muted">
                   Seven agents assess, debate and prepare a decision. Nothing is executed until you approve.
                 </span>
@@ -196,7 +242,7 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
           ) : null}
         </Panel>
 
-        <SavedRuns onReplay={onReplay} />
+        <SavedRuns runs={savedRuns} error={savedError} onReplay={onReplay} />
       </div>
 
       <ProjectData />
@@ -204,17 +250,13 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
   );
 }
 
-function SavedRuns({ onReplay }: { onReplay: (traceId: string) => void }) {
-  const [runs, setRuns] = useState<StoredRun[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+interface SavedRunsProps {
+  runs: StoredRun[] | null;
+  error: string | null;
+  onReplay: (traceId: string) => void;
+}
 
-  useEffect(() => {
-    api
-      .listRuns()
-      .then((all) => setRuns(all.filter((r) => r.kind === "full" && ["completed", "rejected"].includes(r.state))))
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Could not load saved runs"));
-  }, []);
-
+function SavedRuns({ runs, error, onReplay }: SavedRunsProps) {
   return (
     <Panel title="Replay a saved run" className="shrink-0">
       {error ? <ErrorState message={error} /> : null}

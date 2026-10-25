@@ -32,6 +32,7 @@ export interface StoredRun {
   change_type: string | null;
   parameters: Record<string, number> | null;
   mode: Mode | null;
+  overrides: RunOverrides | null;
   started_at: string | null;
   ended_at: string | null;
   event_count: number;
@@ -109,7 +110,21 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await response.json()) as T;
 }
 
+/** The Intake agent's reading of a typed request (POST /api/interpret). */
+export interface Interpretation {
+  status: "interpreted" | "declined";
+  change_type: string | null;
+  title: string | null;
+  parameters: Record<string, number>;
+  mode: Mode | null;
+  instruction_text: string | null;
+  reading: string;
+  reason: string;
+}
+
 export const api = {
+  interpret: (text: string) =>
+    request<Interpretation>("/api/interpret", { method: "POST", body: JSON.stringify({ text }) }),
   changeTypes: () => request<ChangeType[]>("/api/change-types"),
   project: () => request<ProjectInfo>("/api/data/project"),
   contract: () => request<{ contract_ref: string; clauses: Clause[] }>("/api/data/contract"),

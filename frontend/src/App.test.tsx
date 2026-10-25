@@ -17,16 +17,17 @@ const CHANGE_TYPES = [
     parameters: [{ name: "added_area_m2", label: "Extra paving (m2)", default: 400, min: 100, max: 1500, step: 50 }] },
 ];
 
-function stubBackend(ok: boolean, liveRuns = true) {
+function stubBackend(ok: boolean, liveRuns = true, interpretation: unknown = null) {
   const bodies: Record<string, unknown> = {
     "/api/health": { status: "ok", version: "0.1.0", data_dir_found: true, golden_found: true, live_runs_available: liveRuns },
     "/api/change-types": CHANGE_TYPES,
     "/api/runs": [{ id: "demo_run_paving_area", source: "fixture", run_id: "R-1", kind: "full", state: "completed", live: false,
-      change_type: "paving_area", parameters: { added_area_m2: 400 }, mode: "internal_what_if", started_at: "2026-10-25T08:00:00Z",
+      change_type: "paving_area", parameters: { added_area_m2: 400 }, mode: "internal_what_if", overrides: null, started_at: "2026-10-25T08:00:00Z",
       ended_at: null, event_count: 900, chosen_option: "OPT-NONE" }],
     "/api/data/project": { name: "Al Noor Gardens", employer_commitment_working_day: 107 },
     "/api/data/contract": { contract_ref: "C", clauses: [{ clause: "13.3", title: "Valuation of Variations", text: "..." }] },
     "/api/data/boq": [],
+    "/api/interpret": interpretation,
   };
   vi.stubGlobal(
     "fetch",
@@ -82,4 +83,45 @@ test("reports an unreachable backend", async () => {
   stubBackend(false);
   render(<App />);
   expect(await screen.findByText("Backend not reachable")).toBeInTheDocument();
+});
+
+test("a typed request is read, confirmed and fills in the change and its size", async () => {
+  stubBackend(true, true, {
+    status: "interpreted", change_type: "road_widening", title: "Widen the internal road",
+    parameters: { widen_by_m: 1.5 }, mode: "internal_what_if", instruction_text: "Widen by 1.5 m.",
+    reading: "A wider internal road for a drop-off lane.", reason: "",
+  });
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("Describe the change in your own words"), {
+    target: { value: "widen the road by one and a half metres" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Read my request" }));
+  expect(await screen.findByText("A wider internal road for a drop-off lane.", { exact: false })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Yes, use this" }));
+  expect(await screen.findByLabelText("Extra road width (m)")).toHaveValue("1.5");
+  expect(screen.getByText("Widen by 1.5 m.", { selector: "p.text-sm.leading-relaxed" })).toBeInTheDocument();
+});
+
+test("a request outside the three changes is declined politely", async () => {
+  stubBackend(true, true, { status: "declined", change_type: null, title: null, parameters: {}, mode: null,
+    instruction_text: null, reading: "", reason: "I can only assess the wall, road or paving changes." });
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("Describe the change in your own words"), {
+    target: { value: "build a swimming pool" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Read my request" }));
+  expect(await screen.findByText(/I can only assess the wall, road or paving changes/)).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Run agents" })).not.toBeInTheDocument();
+});
+
+test("a saved run of the same change and size can be replayed at no cost", async () => {
+  stubBackend(true);
+  render(<App />);
+  await screen.findByRole("button", { name: "Replay" });
+  fireEvent.click(screen.getByRole("button", { name: /Add paving area/ }));
+  expect(await screen.findByRole("button", { name: "Replay saved run (no cost)" })).toBeInTheDocument();
+  fireEvent.change(screen.getByLabelText("Extra paving (m2)"), { target: { value: "450" } });
+  expect(screen.queryByRole("button", { name: "Replay saved run (no cost)" })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: /Raise the boundary wall/ }));
+  expect(screen.queryByRole("button", { name: "Replay saved run (no cost)" })).not.toBeInTheDocument();
 });

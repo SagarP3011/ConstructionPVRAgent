@@ -20,6 +20,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 from pvr import __version__
+from pvr.agents.interpret import Interpretation, InterpretError, interpret_request
 from pvr.api.runs import RunManager, RunStateError
 from pvr.config import DATA_DIR, GOLDEN_PATH, load_settings
 from pvr.data_loader import DATA_FILES, read_json
@@ -57,6 +58,10 @@ class StartRunResponse(BaseModel):
     run_id: str
     events_url: str
     snapshot_url: str
+
+
+class InterpretRequest(BaseModel):
+    text: str = Field(max_length=2000)
 
 
 class ApproveRequest(BaseModel):
@@ -187,6 +192,21 @@ def create_app(manager: RunManager | None = None) -> FastAPI:
         if name not in DATA_FILES:
             raise HTTPException(404, f"Unknown data file {name}. Known: {', '.join(DATA_FILES)}")
         return read_json(name)
+
+    @app.post("/api/interpret", response_model=Interpretation)
+    def interpret(body: InterpretRequest) -> Interpretation:
+        """Free-text change input: the Intake agent reads a typed request and maps it to a supported change
+        type and its sizes, or declines it. Nothing runs until the person confirms and starts the run."""
+        try:
+            llm = runs.llm_factory(runs.settings)
+        except LLMError as exc:
+            raise HTTPException(503, f"Typed requests need the language model: {exc}. Choose a change above.") from None
+        try:
+            return interpret_request(body.text, runs.data, runs.settings, llm)
+        except InterpretError as exc:
+            raise HTTPException(422, str(exc)) from None
+        except LLMError as exc:
+            raise HTTPException(502, f"The language model could not be reached: {exc}") from None
 
     @app.post("/api/runs", response_model=StartRunResponse, status_code=201)
     def start(body: StartRunRequest) -> StartRunResponse:

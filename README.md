@@ -62,6 +62,8 @@ Press Ctrl+C in the dev window to stop both servers.
 | `.venv\Scripts\python.exe -m pvr.cli agent cost --change wall_height` | One agent alone, live |
 | `.venv\Scripts\python.exe -m pvr.cli run --change wall_height` | Full seven-agent run; pauses for your approval, then executes the approved actions |
 | `.venv\Scripts\python.exe -m pvr.cli save-fixture R-...` | Save a completed, approved run as `fixtures/demo_run_<change_type>.jsonl` (plus its outputs) |
+| `.venv\Scripts\python.exe -m pvr.cli save-fixture R-... --name wall_3m` | Save a variant as `fixtures/demo_run_wall_3m.jsonl`, next to the default demo runs |
+| `.venv\Scripts\python.exe -m pvr.cli engines --change wall_height --contingency 75000` | Deterministic what-if check (also `--time-buffer DAYS`), no LLM |
 
 `run` also takes `--param name=value`, `--mode internal_what_if|contractor_pvr`, and for unattended use
 `--approve OPT-... --approver "Name" --role "Role"` or `--reject "reason"`. Each run writes its full event trace to
@@ -73,6 +75,7 @@ Press Ctrl+C in the dev window to stop both servers.
 |---|---|
 | `GET /api/health` | Health check; `live_runs_available` says whether an API key is set |
 | `GET /api/change-types`, `GET /api/data/{name}` | Change types and data files |
+| `POST /api/interpret` | Free-text change input: `{"text": "..."}`; the Intake agent maps it to a change type and sizes, or declines |
 | `POST /api/runs` | Start a live run: `{"change_type": "...", "parameters": {...}, "mode": "...", "overrides": {...}}` |
 | `GET /api/runs/{id}/events` | Server-Sent Events: the run's events live (history first) |
 | `GET /api/runs/{id}` | Run state snapshot (also for stored runs and fixtures) |
@@ -97,6 +100,18 @@ curl -N http://127.0.0.1:8000/api/runs/<run_id>/events
 A run waiting for approval is held in server memory; after a restart its trace remains but it can no longer be
 approved.
 
+## Live or saved: keeping model costs down
+
+A full seven-agent run calls the model about 30 to 55 times (roughly 150,000 to 300,000 prompt tokens). Every
+completed run is stored in `runs/` and can be replayed exactly, with no model calls, from **Replay a saved run**.
+When the change, size and mode you choose match a saved run, the start screen also offers **Replay saved run
+(no cost)** next to **Run agents**. Recommended: record the runs you plan to show once (`save-fixture`, with
+`--name` for variants), present those as replays, and run live only for a change the audience asks for.
+
+Typed requests ("Describe the change in your own words") cost one small model call each. The Intake agent only
+picks the change type and copies the sizes from the text; code works out relative sizes ("half a metre higher"),
+checks them against the allowed ranges and fills the instruction. Nothing runs until the person confirms.
+
 ## Demo script (about 15 minutes)
 
 Before the meeting: start the backend and the production build of the frontend (see Build status), open
@@ -105,8 +120,9 @@ below except steps 2 and 9 works from the recorded demo runs ("Replay a saved ru
 
 1. **Start screen.** Show the contract clauses and the BOQ (bill of quantities) under Project data. Say: "Choose a
    change, and set its size."
-2. **Let Aldar pick.** If they have no preference: Raise the boundary wall, 2.5 m, Contractor PVR mode. Click
-   **Run agents** (or replay the wall demo run).
+2. **Let Aldar pick.** Pick a card, or let them type the change in their own words and confirm the reading. If they
+   have no preference: Raise the boundary wall, 2.5 m, Contractor PVR mode. Click **Run agents**, or **Replay saved
+   run (no cost)**.
 3. **Agent Room.** Point at Intake, then Contract, Cost and Time working in parallel (pulsing nodes, tool sparks), and
    an agent asking another a question (a "?" flying between them, an Answer in the timeline).
 4. **Schedule tab.** Added days against float: the wall chain has 14 added days, 6 of them absorbed by float, so
@@ -135,7 +151,7 @@ console errors; every number on screen traceable to a fact; nothing executed bef
 
 ## Build status
 
-Built in phases (SPEC section 16). Phases 0 to 6 are in place: scaffold, deterministic engines, tools and facts,
+Built in phases (SPEC section 16). Phases 0 to 7 are in place (Phase 7: free-text change input only): scaffold, deterministic engines, tools and facts,
 the full multi-agent orchestration, the API with live streaming, run store and replay (fixtures in `fixtures/`), and
 the web app: change selector, Agent Room, evidence, analysis tabs, decision and outputs, What-if re-runs and the
 trace drawer, for live runs and replays.

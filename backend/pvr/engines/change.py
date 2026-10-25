@@ -142,6 +142,31 @@ def _decimals(step: float) -> int:
     return max(0, -math.floor(math.log10(step))) if step < 1 else 0
 
 
+def current_value_key(parameter_name: str) -> str:
+    """The `fixed` key holding today's value of a parameter that sets a new size:
+    "new_height_m" -> "current_height_m". Parameters that already are an amount of change (extra width,
+    added area) have none."""
+    return "current_" + parameter_name.removeprefix("new_")
+
+
+def resolve_parameter(ct: ChangeType, name: str, value: float | None = None,
+                      increase_by: float | None = None) -> float:
+    """A parameter value from a request: either the value itself, or an increase on today's value
+    (for example "half a metre higher"). The addition is done here, never by a language model."""
+    spec = next((p for p in ct.parameters if p.name == name), None)
+    if spec is None:
+        raise EngineError(f"{ct.id} has no parameter {name}; its parameters are "
+                          + ", ".join(p.name for p in ct.parameters))
+    if (value is None) == (increase_by is None):
+        raise EngineError(f"Give either a value or an increase for {name}, not both or neither")
+    if value is not None:
+        return float(value)
+    current = ct.fixed.get(current_value_key(name))
+    if current is None:
+        raise EngineError(f"{spec.label} is already an amount of change; give the amount as a value")
+    return r2(float(current) + float(increase_by))  # type: ignore[arg-type]
+
+
 def format_parameter(value: float, step: float) -> str:
     """Format a parameter value with as many decimals as its step needs (2.5, 1.0, 600)."""
     return f"{value:.{_decimals(step)}f}"

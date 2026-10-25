@@ -164,6 +164,7 @@ class RunManager:
                 "id": trace_id, "source": source, "run_id": snap.run_id, "kind": snap.kind, "state": snap.state,
                 "live": snap.live, "change_type": snap.context.get("change_type"),
                 "parameters": snap.context.get("parameters"), "mode": snap.context.get("mode"),
+                "overrides": snap.context.get("overrides"),
                 "started_at": snap.started_at, "ended_at": snap.ended_at, "event_count": snap.event_count,
                 "chosen_option": (snap.decision or {}).get("option_id"),
             })

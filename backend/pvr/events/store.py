@@ -95,9 +95,12 @@ def list_traces(runs_dir: Path = RUNS_DIR, fixtures_dir: Path = FIXTURES_DIR) ->
     return [(p.stem, "fixture", p) for p in fixtures] + [(p.parent.name, "run", p) for p in runs]
 
 
-def save_fixture(run_id: str, runs_dir: Path = RUNS_DIR, fixtures_dir: Path = FIXTURES_DIR) -> Path:
+def save_fixture(run_id: str, runs_dir: Path = RUNS_DIR, fixtures_dir: Path = FIXTURES_DIR,
+                 name: str | None = None) -> Path:
     """Copy a completed, approved run to `fixtures/demo_run_<change_type>.jsonl` (and its outputs to
-    `fixtures/demo_run_<change_type>_outputs/`). Replaces an earlier fixture for that change type."""
+    `fixtures/demo_run_<change_type>_outputs/`). Replaces an earlier fixture of the same name. With
+    `name`, the fixture is `demo_run_<name>`, so variants (a 3.0 m wall, a larger contingency) can sit next
+    to the default demo runs."""
     path = runs_dir / run_id / "events.jsonl"
     if not is_safe_id(run_id) or not path.is_file():
         raise FileNotFoundError(f"No stored run {run_id}")
@@ -107,7 +110,12 @@ def save_fixture(run_id: str, runs_dir: Path = RUNS_DIR, fixtures_dir: Path = FI
         raise ValueError(f"Run {run_id} is not a full multi-agent run")
     if not any(e.type == "run.completed" and e.payload.get("status") == "approved" for e in events):
         raise ValueError(f"Run {run_id} did not complete with an approval")
-    name = fixture_name(started.payload["context"]["change_type"])
+    if name is not None:
+        name = name if name.startswith(FIXTURE_PREFIX) else FIXTURE_PREFIX + name
+        if not is_safe_id(name):
+            raise ValueError(f"Fixture names use letters, digits, '_', '.' and '-' only; got {name}")
+    else:
+        name = fixture_name(started.payload["context"]["change_type"])
     fixtures_dir.mkdir(parents=True, exist_ok=True)
     target = fixtures_dir / f"{name}.jsonl"
     shutil.copyfile(path, target)

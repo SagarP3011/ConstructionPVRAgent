@@ -288,6 +288,17 @@ def test_stored_run_and_fixture_replay_without_api_key(harness: Harness, tmp_pat
     assert events == stored and reason == "run.completed"
 
 
+def test_named_fixtures_sit_next_to_the_default_demo_run(harness: Harness) -> None:
+    run_id = harness.start("paving_area")
+    harness.approve_all(run_id)
+    default = save_fixture(run_id, harness.runs_dir, harness.fixtures_dir)
+    named = save_fixture(run_id, harness.runs_dir, harness.fixtures_dir, name="paving_big")
+    assert default.name == "demo_run_paving_area.jsonl" and named.name == "demo_run_paving_big.jsonl"
+    assert (harness.fixtures_dir / "demo_run_paving_big_outputs" / "decision.json").is_file()
+    with pytest.raises(ValueError, match="Fixture names"):
+        save_fixture(run_id, harness.runs_dir, harness.fixtures_dir, name="../escape")
+
+
 def test_save_fixture_refuses_unfinished_runs(harness: Harness) -> None:
     run_id = harness.start("paving_area")
     harness.wait_for_state(run_id, "awaiting_approval")

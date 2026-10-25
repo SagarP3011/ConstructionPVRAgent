@@ -3,6 +3,7 @@ import { api, type Clause, type ProjectInfo } from "./api/client";
 import type { AgentId } from "./api/events";
 import { fetchHealth } from "./api/health";
 import { ChangeSelector, type RunRequest } from "./components/change/ChangeSelector";
+import { ErrorBoundary } from "./components/common/ErrorBoundary";
 import { Header, type BackendState } from "./components/layout/Header";
 import { RoomLayout } from "./components/layout/RoomLayout";
 import { STAGES, type StageId } from "./components/layout/stages";
@@ -23,6 +24,8 @@ export default function App() {
   const [selectedFactId, selectFact] = useState<string | null>(null);
   const [selectedClause, selectClause] = useState<string | null>(null);
   const [agentFilter, setAgentFilter] = useState<AgentId | null>(null);
+  const [traceOpen, setTraceOpen] = useState(false);
+  const [traceFocus, setTraceFocus] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -43,6 +46,13 @@ export default function App() {
     selectFact(null);
     selectClause(null);
     setAgentFilter(null);
+    setTraceOpen(false);
+    setTraceFocus(null);
+  };
+
+  const backToSelector = () => {
+    run.reset();
+    clearSelections();
   };
 
   const startLive = async (request: RunRequest) => {
@@ -87,6 +97,10 @@ export default function App() {
       project,
       agentFilter,
       setAgentFilter,
+      openTrace: (toolCallId) => {
+        setTraceFocus(toolCallId ?? null);
+        setTraceOpen(true);
+      },
     }),
     [selection, run.state, run.source, speed, project, agentFilter],
   );
@@ -101,19 +115,32 @@ export default function App() {
         replay={run.source?.kind === "replay"}
         speed={speed}
         onSpeed={changeSpeed}
-        onNewChange={
+        onNewChange={inRoom ? backToSelector : null}
+        onTrace={
           inRoom
             ? () => {
-                run.reset();
-                clearSelections();
+                setTraceFocus(null);
+                setTraceOpen(!traceOpen);
               }
             : null
         }
       />
       {inRoom ? (
-        <RoomProvider value={value} selection={selection}>
-          <RoomLayout connectionError={run.connectionError} />
-        </RoomProvider>
+        <ErrorBoundary onReset={backToSelector}>
+          <RoomProvider value={value} selection={selection}>
+            <RoomLayout
+              connectionError={run.connectionError}
+              liveAvailable={liveAvailable}
+              onRerun={startLive}
+              trace={{
+                open: traceOpen,
+                focusToolCall: traceFocus,
+                close: () => setTraceOpen(false),
+                clearFocus: () => setTraceFocus(null),
+              }}
+            />
+          </RoomProvider>
+        </ErrorBoundary>
       ) : (
         <ChangeSelector liveAvailable={liveAvailable} onRun={startLive} onReplay={startReplay} />
       )}

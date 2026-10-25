@@ -107,10 +107,20 @@ _STYLE = """
 body{font-family:Poppins,system-ui,sans-serif;color:#2C2A29;margin:32px;max-width:960px}
 h1,h2{color:#003057;font-weight:600}h1{font-size:22px}h2{font-size:16px;margin-top:28px}
 table{border-collapse:collapse;width:100%;font-size:13px;margin-top:8px}
-th,td{border:1px solid #D7D2CB;padding:6px 8px;text-align:left;vertical-align:top}
-th{background:#F7F6F4;font-weight:600;width:28%}.note{color:#6E6A66;font-size:12px}
-@media print{body{margin:12mm}}
+th,td{border:1px solid #D7D2CB;padding:6px 8px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:#F7F6F4;font-weight:600;width:28%}td table th{width:auto}.note{color:#6E6A66;font-size:12px}
+@page{size:A4;margin:14mm}
+@media print{body{margin:0;max-width:none;font-size:11px}table{font-size:10px}h2{break-after:avoid}
+tr{break-inside:avoid}th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 """
+
+
+def _label(key: str) -> str:
+    """A field name as a heading: "claimed_total_aed" -> "Claimed total AED"."""
+    words = key.replace("_", " ").split()
+    upper = {"aed", "pvr", "boq", "id", "eot", "cpm", "es", "ef", "ls", "lf", "tf"}
+    text = " ".join(w.upper() if w.lower() in upper else w for w in words)
+    return text[:1].upper() + text[1:]
 
 
 def _cell(value: Any) -> str:
@@ -119,7 +129,7 @@ def _cell(value: Any) -> str:
     if isinstance(value, list):
         if value and all(isinstance(v, dict) for v in value):
             keys = list(dict.fromkeys(k for v in value for k in v))
-            head = "".join(f"<th>{html.escape(k)}</th>" for k in keys)
+            head = "".join(f"<th>{html.escape(_label(k))}</th>" for k in keys)
             rows = "".join("<tr>" + "".join(f"<td>{_cell(v.get(k, ''))}</td>" for k in keys) + "</tr>"
                            for v in value)
             return f"<table><tr>{head}</tr>{rows}</table>"
@@ -128,12 +138,12 @@ def _cell(value: Any) -> str:
 
 
 def _table(data: dict[str, Any]) -> str:
-    rows = "".join(f"<tr><th>{html.escape(k)}</th><td>{_cell(v)}</td></tr>" for k, v in data.items())
+    rows = "".join(f"<tr><th>{html.escape(_label(k))}</th><td>{_cell(v)}</td></tr>" for k, v in data.items())
     return f"<table>{rows}</table>"
 
 
 def render_html(title: str, content: dict[str, Any]) -> str:
-    sections = "".join(f"<h2>{html.escape(k.replace('_', ' ').capitalize())}</h2>{_cell(v)}"
+    sections = "".join(f"<h2>{html.escape(_label(k))}</h2>{_cell(v)}"
                        for k, v in content.items() if isinstance(v, (dict, list)))
     header = _table({k: v for k, v in content.items() if not isinstance(v, (dict, list))})
     return (f"<!doctype html><html lang='en'><head><meta charset='utf-8'><title>{html.escape(title)}</title>"

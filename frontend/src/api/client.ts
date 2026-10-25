@@ -38,10 +38,17 @@ export interface StoredRun {
   chosen_option: string | null;
 }
 
+/** What-if limits for a run; null keeps the project's value. */
+export interface RunOverrides {
+  cost_contingency_remaining_aed: number | null;
+  time_buffer_working_days: number | null;
+}
+
 export interface StartRunBody {
   change_type: string;
   parameters: Record<string, number>;
   mode: Mode;
+  overrides?: RunOverrides;
 }
 
 export interface ApproveBody {

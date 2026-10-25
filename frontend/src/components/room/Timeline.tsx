@@ -11,7 +11,8 @@ const STAGE_LABEL: Record<string, string> = Object.fromEntries(STAGES.map((s) =>
 
 /** Chat-style timeline of messages and tool calls. Follows the newest item unless the viewer scrolls up. */
 export function Timeline() {
-  const { state, agentFilter, setAgentFilter, speed } = useRoom();
+  const { state, agentFilter, setAgentFilter, speed, selectedFactId } = useRoom();
+  const highlightedCall = selectedFactId ? state.facts[selectedFactId]?.tool_call_id ?? null : null;
   const items = visibleTimeline(state, agentFilter);
   const scroller = useRef<HTMLDivElement>(null);
   const [follow, setFollow] = useState(true);
@@ -87,7 +88,7 @@ export function Timeline() {
           }
           if (item.kind === "tool") {
             const call = state.tools[item.id];
-            return call ? <ToolCallRow key={item.id} call={call} /> : null;
+            return call ? <ToolCallRow key={item.id} call={call} highlighted={call.id === highlightedCall} /> : null;
           }
           const m = state.messages[item.id];
           if (!m) return null;

@@ -2,7 +2,7 @@ import { CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAx
 import type { OptionResult } from "../../api/events";
 import { aed, describeOption, formatAed, workingDays } from "../../format";
 import { useRoom } from "../../state/RoomContext";
-import { LoadingState } from "../layout/Panel";
+import { Waiting } from "../common/Waiting";
 
 interface Point {
   id: string;
@@ -32,7 +32,7 @@ function PointTooltip({ active, payload }: { active?: boolean; payload?: { paylo
 export function OptionsPanel() {
   const { state } = useRoom();
   const all = Object.values(state.options);
-  if (all.length === 0) return <LoadingState message="No options evaluated yet" />;
+  if (all.length === 0) return <Waiting message="No options evaluated yet" />;
   const pareto = new Set(state.results.searchOptions?.pareto_option_ids ?? []);
   const front = all.filter((o) => pareto.has(o.option_id)).map(toPoint);
   const rest = all.filter((o) => !pareto.has(o.option_id)).map(toPoint);

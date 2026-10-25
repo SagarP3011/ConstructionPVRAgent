@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, outputUrl } from "../../api/client";
 import { useRoom } from "../../state/RoomContext";
-import { ErrorState, LoadingState, Panel } from "../layout/Panel";
+import { EmptyState, ErrorState, LoadingState, Panel } from "../layout/Panel";
 import { PvrFormPreview } from "./PvrFormPreview";
 
 interface TaskRecord {
@@ -45,11 +45,15 @@ export function OutputsPanel() {
   if (state.executed.length === 0) {
     return (
       <Panel title="Outputs">
-        <LoadingState
-          message={
-            state.status === "completed" ? "No actions were approved." : "Nothing is executed until a person approves."
-          }
-        />
+        {state.status === "completed" ? (
+          <EmptyState message="No actions were approved." />
+        ) : state.status === "rejected" ? (
+          <EmptyState message="The assessment was rejected. Nothing was executed." />
+        ) : state.status === "failed" ? (
+          <EmptyState message="The run stopped. Nothing was executed." />
+        ) : (
+          <LoadingState message="Nothing is executed until a person approves." />
+        )}
       </Panel>
     );
   }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { api, type ChangeType, type StoredRun } from "../../api/client";
+import { api, type ChangeType, type StartRunBody, type StoredRun } from "../../api/client";
 import type { Mode } from "../../api/events";
 import { CHANGE_LABEL, fillTemplate, formatDate, formatParameter } from "../../format";
 import { EmptyState, ErrorState, LoadingState, Panel } from "../layout/Panel";
@@ -15,11 +15,7 @@ const MODE_LABEL: Record<Mode, string> = {
   internal_what_if: "Internal what-if (assess before announcing)",
 };
 
-export interface RunRequest {
-  change_type: string;
-  parameters: Record<string, number>;
-  mode: Mode;
-}
+export type RunRequest = StartRunBody;
 
 interface ChangeSelectorProps {
   liveAvailable: boolean | null;

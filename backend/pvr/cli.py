@@ -61,14 +61,18 @@ def cmd_engines(args: argparse.Namespace) -> int:
     from pvr.engines.common import EngineError
     from pvr.report import assessment_report
 
+    from pvr.models import Overrides
+
     data = get_data()
     if args.change:
         runs = [(args.change, _parse_params(args.param), args.mode)]
     else:
         # Defaults: the wall in contractor PVR mode (it has a claim to check), the others as what-ifs.
         runs = [(ct.id, {}, ct.modes[0]) for ct in data.scenario.change_types]
+    overrides = Overrides(cost_contingency_remaining_aed=args.contingency, time_buffer_working_days=args.time_buffer)
     try:
-        reports = [assessment_report(make_context(data, ct, params, mode=mode), data) for ct, params, mode in runs]
+        reports = [assessment_report(make_context(data, ct, params, mode=mode, overrides=overrides), data)
+                   for ct, params, mode in runs]
     except EngineError as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 2
@@ -244,6 +248,10 @@ def build_parser() -> argparse.ArgumentParser:
                          help="Parameter value, repeatable (with --change)")
     engines.add_argument("--mode", default="internal_what_if", choices=["internal_what_if", "contractor_pvr"],
                          help="Mode (with --change)")
+    engines.add_argument("--contingency", type=float, metavar="AED",
+                         help="What-if: remaining cost contingency instead of the project's")
+    engines.add_argument("--time-buffer", type=int, metavar="DAYS",
+                         help="What-if: time buffer in working days instead of the project's")
     engines.set_defaults(func=cmd_engines)
 
     agent = sub.add_parser("agent", help="Run one agent alone, live, with earlier stages pre-filled from engines.")

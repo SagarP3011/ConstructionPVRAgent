@@ -122,6 +122,8 @@ export interface RunState {
   eventCount: number;
   lastEventId: string | null;
   seq: number;
+  /** Every event received, in order (for the trace drawer and the trace download). */
+  events: RunEvent[];
 }
 
 const MAX_FLIGHTS = 24;
@@ -178,6 +180,7 @@ export function initialRunState(): RunState {
     eventCount: 0,
     lastEventId: null,
     seq: 0,
+    events: [],
   };
 }
 
@@ -470,6 +473,7 @@ function apply(s: RunState, event: RunEvent): void {
 export function reduceEvents(state: RunState, events: RunEvent[]): RunState {
   if (events.length === 0) return state;
   const next = cloneForBatch(state, events);
+  next.events = state.events.concat(events);
   touched = new Set();
   for (const event of events) apply(next, event);
   touched = new Set();

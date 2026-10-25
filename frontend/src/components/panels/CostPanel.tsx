@@ -1,13 +1,13 @@
 import { aed, formatDelta, formatNumber, workingDays } from "../../format";
 import { useRoom } from "../../state/RoomContext";
-import { LoadingState } from "../layout/Panel";
+import { Waiting } from "../common/Waiting";
 
 /** Cost line breakdown at contract rates; in contractor PVR mode, claimed against assessed. */
 export function CostPanel() {
   const { state } = useRoom();
   const price = state.results.price;
   const claim = state.results.claim;
-  if (!price) return <LoadingState message="The Cost agent is pricing the change" />;
+  if (!price) return <Waiting message="The Cost agent is pricing the change" />;
   const largest = Math.max(...price.lines.map((l) => Math.abs(l.amount_aed)), 1);
 
   return (

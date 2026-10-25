@@ -5,6 +5,7 @@ import { aed, describeOption } from "../../format";
 import { agentLabel, DEBATERS } from "../../state/agents";
 import { useRoom } from "../../state/RoomContext";
 import { AgentTag } from "../common/AgentIcon";
+import { Waiting } from "../common/Waiting";
 import { LoadingState, Panel } from "../layout/Panel";
 import { ApprovalModal, type ModalKind } from "./ApprovalModal";
 import { OptionCard } from "./OptionCard";
@@ -48,7 +49,7 @@ export function DecisionPanel() {
   if (!state.approvalRequested && !decided) {
     return (
       <Panel title="Decision">
-        <LoadingState message="The options are prepared for a person to decide after the debate." />
+        <Waiting message="The options are prepared for a person to decide after the debate." />
       </Panel>
     );
   }

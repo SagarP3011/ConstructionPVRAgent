@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import type { StartRunBody } from "../../api/client";
 import { useRoom } from "../../state/RoomContext";
 import { DetailDrawer } from "../common/DetailDrawer";
 import { DecisionPanel } from "../decision/DecisionPanel";
@@ -7,14 +8,19 @@ import { OutputsPanel } from "../outputs/OutputsPanel";
 import { AnalysisPanel } from "../panels/AnalysisPanel";
 import { AgentGraph } from "../room/AgentGraph";
 import { Timeline } from "../room/Timeline";
+import { TraceDrawer } from "../trace/TraceDrawer";
+import { WhatIfControls } from "../whatif/WhatIfControls";
 import { ErrorState, Panel } from "./Panel";
 
 interface RoomLayoutProps {
   connectionError: string | null;
+  liveAvailable: boolean | null;
+  onRerun: (request: StartRunBody) => Promise<void>;
+  trace: { open: boolean; focusToolCall: string | null; close: () => void; clearFocus: () => void };
 }
 
 /** The run screen: evidence (25%), Agent Room (45%), analysis tabs (30%); decision and outputs below. */
-export function RoomLayout({ connectionError }: RoomLayoutProps) {
+export function RoomLayout({ connectionError, liveAvailable, onRerun, trace }: RoomLayoutProps) {
   const { state } = useRoom();
   const decision = useRef<HTMLDivElement>(null);
   const fatal = state.errors.find((e) => e.fatal);
@@ -28,6 +34,7 @@ export function RoomLayout({ connectionError }: RoomLayoutProps) {
 
   return (
     <main className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto bg-surface p-4">
+      <WhatIfControls liveAvailable={liveAvailable} onRerun={onRerun} />
       {connectionError ? <ErrorState message={connectionError} /> : null}
       {fatal ? <ErrorState message={`The run stopped${fatal.stage ? ` during ${fatal.stage}` : ""}: ${fatal.error}`} /> : null}
       {!fatal && agentErrors.length ? (
@@ -70,6 +77,12 @@ export function RoomLayout({ connectionError }: RoomLayoutProps) {
       </p>
 
       <DetailDrawer />
+      <TraceDrawer
+        open={trace.open}
+        focusToolCall={trace.focusToolCall}
+        onClose={trace.close}
+        onClearFocus={trace.clearFocus}
+      />
     </main>
   );
 }

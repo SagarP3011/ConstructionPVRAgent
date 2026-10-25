@@ -28,10 +28,11 @@ interface HeaderProps {
   speed: number;
   onSpeed: (speed: number) => void;
   onNewChange: (() => void) | null;
+  onTrace: (() => void) | null;
 }
 
 /** App header: title, notice, the current change, stage progress, speed control and New change. */
-export function Header({ backend, context, stage, stagesDone, replay, speed, onSpeed, onNewChange }: HeaderProps) {
+export function Header({ backend, context, stage, stagesDone, replay, speed, onSpeed, onNewChange, onTrace }: HeaderProps) {
   return (
     <header className="flex items-center justify-between gap-6 border-b border-border bg-bg px-6 py-3">
       <div className="min-w-0">
@@ -67,6 +68,15 @@ export function Header({ backend, context, stage, stagesDone, replay, speed, onS
               </button>
             ))}
           </div>
+        ) : null}
+        {onTrace ? (
+          <button
+            type="button"
+            onClick={onTrace}
+            className="rounded-full px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-tint"
+          >
+            Trace
+          </button>
         ) : null}
         {onNewChange ? (
           <button

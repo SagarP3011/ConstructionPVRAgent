@@ -16,6 +16,8 @@ export interface RoomValue {
   selectClause: (clauseId: string | null) => void;
   agentFilter: AgentId | null;
   setAgentFilter: (agent: AgentId | null) => void;
+  /** Open the trace drawer, optionally showing one tool call. */
+  openTrace: (toolCallId?: string | null) => void;
 }
 
 /** The viewer's selections only. It changes when the viewer clicks, not with every event, so the many

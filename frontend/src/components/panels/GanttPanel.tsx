@@ -1,7 +1,7 @@
 import type { CpmActivity } from "../../api/events";
 import { formatDate, workingDays } from "../../format";
 import { useRoom } from "../../state/RoomContext";
-import { LoadingState } from "../layout/Panel";
+import { Waiting } from "../common/Waiting";
 
 const WIDTH = 540;
 const LABEL_W = 150;
@@ -19,7 +19,7 @@ export function GanttPanel() {
   const baseline = state.results.baselineCpm;
   const impacted = state.results.impactedCpm;
   const added = state.results.addedDuration;
-  if (!baseline && !impacted) return <LoadingState message="The Time agent is working on the programme" />;
+  if (!baseline && !impacted) return <Waiting message="The Time agent is working on the programme" />;
 
   const addedDays = Object.fromEntries((added?.activities ?? []).map((a) => [a.activity_id, a.added_days]));
   const main = impacted ?? baseline;

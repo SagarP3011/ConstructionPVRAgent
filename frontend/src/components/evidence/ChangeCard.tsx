@@ -1,13 +1,13 @@
 import { aed, formatDate, workingDays } from "../../format";
 import { useRoom } from "../../state/RoomContext";
-import { LoadingState } from "../layout/Panel";
+import { Waiting } from "../common/Waiting";
 
 /** The change instruction and, in contractor PVR mode, the instruction and the contractor's claim. */
 export function ChangeCard() {
   const { state } = useRoom();
   const cr = state.results.changeRequest;
   const notice = state.results.notice;
-  if (!cr) return <LoadingState message="The Intake agent is reading the change" />;
+  if (!cr) return <Waiting message="The Intake agent is reading the change" />;
   return (
     <div className="flex flex-col gap-3 text-sm">
       <div>

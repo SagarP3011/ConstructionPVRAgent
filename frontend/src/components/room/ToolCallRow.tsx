@@ -1,15 +1,22 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { AGENTS, isAgentId } from "../../state/agents";
 import type { ToolCallView } from "../../state/runStore";
 import { toolArgs, toolSummary } from "./toolSummary";
 
 /** A collapsible row: "Time called run_cpm (with the change): completion day 95". */
-export const ToolCallRow = memo(function ToolCallRow({ call }: { call: ToolCallView }) {
+export const ToolCallRow = memo(function ToolCallRow({ call, highlighted = false }: { call: ToolCallView; highlighted?: boolean }) {
   const [open, setOpen] = useState(false);
+  const row = useRef<HTMLDivElement>(null);
+  // The tool call behind the fact the viewer selected: open it and bring it into view.
+  useEffect(() => {
+    if (!highlighted) return;
+    setOpen(true);
+    row.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [highlighted]);
   const agent = isAgentId(call.agent) ? AGENTS[call.agent] : null;
   const args = toolArgs(call);
   return (
-    <div className="pl-9 text-[11px]">
+    <div ref={row} className={`pl-9 text-[11px] ${highlighted ? "rounded bg-accent-tint ring-2 ring-accent-2" : ""}`}>
       <button
         type="button"
         onClick={() => setOpen(!open)}

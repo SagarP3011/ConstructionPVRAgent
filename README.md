@@ -97,11 +97,48 @@ curl -N http://127.0.0.1:8000/api/runs/<run_id>/events
 A run waiting for approval is held in server memory; after a restart its trace remains but it can no longer be
 approved.
 
+## Demo script (about 15 minutes)
+
+Before the meeting: start the backend and the production build of the frontend (see Build status), open
+http://localhost:4173 and check the header says "Backend connected". If there is no OpenAI key or credit, everything
+below except steps 2 and 9 works from the recorded demo runs ("Replay a saved run").
+
+1. **Start screen.** Show the contract clauses and the BOQ (bill of quantities) under Project data. Say: "Choose a
+   change, and set its size."
+2. **Let Aldar pick.** If they have no preference: Raise the boundary wall, 2.5 m, Contractor PVR mode. Click
+   **Run agents** (or replay the wall demo run).
+3. **Agent Room.** Point at Intake, then Contract, Cost and Time working in parallel (pulsing nodes, tool sparks), and
+   an agent asking another a question (a "?" flying between them, an Answer in the timeline).
+4. **Schedule tab.** Added days against float: the wall chain has 14 added days, 6 of them absorbed by float, so
+   completion moves to day 95. Baseline bars are thin grey; markers show contract completion, the impacted
+   completion and the Employer's commitment.
+5. **Debate.** Challenges in the timeline and stance badges changing under Cost, Time and Commercial. Options tab:
+   every option the agents evaluated, with the Pareto set highlighted.
+6. **Verification.** A Verifier tick on each message. Click any claim chip: the drawer shows the tool call and field
+   the number came from ("Computed by a deterministic engine"). "Show this tool call in the trace" opens the trace
+   at that call. Where a message failed a check, the corrected message shows the original struck through.
+7. **Decision.** Up to three options with delay, completion, total cost, buffer and contingency left, and the agents
+   behind each. Tick the actions, enter a name and role, and approve. Nothing ran before this.
+8. **Outputs.** PVR output form (Print to PDF), verification report (contractor mode), tasks and notifications.
+9. **A second change.** New change, then Widen the internal road (critical path: every day counts) or Add paving
+   area (float absorbs it; the debate ends after one round). Same agents, different analysis. Or use **What-if** to
+   re-run the wall at 3.0 m (the buffer breaks without extra crews) or with contingency AED 75,000 (holding the date
+   then fits the budget).
+10. **Trace.** Open Trace in the header: every event, model call (model, tokens, latency) and fact, with filters and
+    a download of the full trace, which replays exactly.
+
+Say plainly: the orchestrator fixes the stages; inside each stage the agents choose their own tools, questions and
+positions. Numbers come from code, agents reason about them, people approve.
+
+**Rehearsal checklist:** each live run under 4 minutes; replays work with the network unplugged from OpenAI; no
+console errors; every number on screen traceable to a fact; nothing executed before approval.
+
 ## Build status
 
-Built in phases (SPEC section 16). Phases 0 to 5 are in place: scaffold, deterministic engines, tools and facts,
+Built in phases (SPEC section 16). Phases 0 to 6 are in place: scaffold, deterministic engines, tools and facts,
 the full multi-agent orchestration, the API with live streaming, run store and replay (fixtures in `fixtures/`), and
-the web app: change selector, Agent Room, evidence, analysis tabs, decision and outputs, for live runs and replays.
+the web app: change selector, Agent Room, evidence, analysis tabs, decision and outputs, What-if re-runs and the
+trace drawer, for live runs and replays.
 
 For a demo, serve the production build (smoother than the dev server): `npm run build` then `npx vite preview` in
 `frontend/`, with the backend running; open http://localhost:4173.

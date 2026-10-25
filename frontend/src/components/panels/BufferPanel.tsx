@@ -1,6 +1,6 @@
 import { aed, describeOption, workingDays } from "../../format";
 import { useRoom } from "../../state/RoomContext";
-import { LoadingState } from "../layout/Panel";
+import { Waiting } from "../common/Waiting";
 import { focusOptions } from "./optionSets";
 
 interface GaugeProps {
@@ -31,7 +31,7 @@ function Gauge({ label, remaining, total, text }: GaugeProps) {
 export function BufferPanel() {
   const { state, project } = useRoom();
   const options = focusOptions(state);
-  if (options.length === 0) return <LoadingState message="The Commercial agent is checking the buffer and contingency" />;
+  if (options.length === 0) return <Waiting message="The Commercial agent is checking the buffer and contingency" />;
 
   // Totals for the gauges: from a buffer check in this run, else the run's overrides, else the project data.
   const anyCheck = Object.values(state.results.buffers)[0];

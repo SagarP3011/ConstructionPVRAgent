@@ -5,7 +5,7 @@ import { useRoom } from "../../state/RoomContext";
 
 /** Side drawer for the selected fact (and the tool call that produced it) or the selected clause. */
 export function DetailDrawer() {
-  const { state, selectedFactId, selectFact, selectedClause, selectClause, contractClauses } = useRoom();
+  const { state, selectedFactId, selectFact, selectedClause, selectClause, contractClauses, openTrace } = useRoom();
   const fact = selectedFactId ? state.facts[selectedFactId] : undefined;
   const call = fact ? state.tools[fact.tool_call_id] : undefined;
   const clause = selectedClause
@@ -61,6 +61,15 @@ export function DetailDrawer() {
                   ) : null}
                   <dd className="col-span-2 mt-2 rounded bg-accent-tint p-2 text-xs text-accent">
                     Computed by a deterministic engine, not by a language model.
+                  </dd>
+                  <dd className="col-span-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => openTrace(fact.tool_call_id)}
+                      className="text-xs font-semibold text-accent underline"
+                    >
+                      Show this tool call in the trace
+                    </button>
                   </dd>
                 </dl>
               ) : (

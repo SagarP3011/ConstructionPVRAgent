@@ -5,6 +5,7 @@ Commands:
     engines     Deterministic assessment for the three default changes (no LLM).
     agent       Run one agent alone, live (for example: agent cost --change wall_height).
     run         Full multi-agent run in the console, with an approval prompt.
+    save-fixture  Save a completed, approved run as a replay fixture.
 """
 
 from __future__ import annotations
@@ -210,6 +211,23 @@ def cmd_run(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_save_fixture(args: argparse.Namespace) -> int:
+    """Copy a completed, approved run to fixtures/demo_run_<change_type>.jsonl for offline replay."""
+    from pvr.events.snapshot import run_snapshot
+    from pvr.events.store import read_events, save_fixture
+
+    try:
+        target = save_fixture(args.run_id)
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+    snap = run_snapshot(read_events(target))
+    print(f"Saved {args.run_id} as {target.name}: {snap.context.get('change_type')} {snap.context.get('parameters')} "
+          f"({snap.context.get('mode')}), {snap.event_count} events, debate {snap.debate.get('rounds')} round(s), "
+          f"options {[o['option_id'] for o in snap.options]}, approved {(snap.decision or {}).get('option_id')}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Build the argument parser with all subcommands."""
     parser = argparse.ArgumentParser(prog="pvr", description="PVR Agent Room command line tools.")
@@ -247,6 +265,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--role", help="Approver role (with --approve or --reject)")
     run.add_argument("--quiet", action="store_true", help="Do not print tool calls")
     run.set_defaults(func=cmd_run)
+
+    fixture = sub.add_parser("save-fixture", help="Save a completed, approved run as the replay fixture for its "
+                                                  "change type.")
+    fixture.add_argument("run_id", help="Run id, for example R-20261025-101500-a1b2")
+    fixture.set_defaults(func=cmd_save_fixture)
     return parser
 
 

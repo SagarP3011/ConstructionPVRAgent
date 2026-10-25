@@ -1,0 +1,14 @@
+[
+  {
+    "notification_id": "ACT-003",
+    "recipients": [
+      "planner",
+      "quantity_surveyor",
+      "contracts"
+    ],
+    "message": "Please note the assessed PVR outcome for VI-017 / PVR-023 is ready for approval review. The current Pareto options are OPT-NONE, OPT-A340 and OPT-A320. Please prepare for follow-up once the approver selects a direction.",
+    "reason": "The approver should be able to trigger notifications to the planner, quantity surveyor, and contracts after review.",
+    "proposed_by": "moderator",
+    "sent_at": "2026-10-25T08:02:40.130+00:00"
+  }
+]

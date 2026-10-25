@@ -1,0 +1,14 @@
+[
+  {
+    "notification_id": "ACT-003",
+    "recipients": [
+      "planner",
+      "quantity_surveyor",
+      "contracts"
+    ],
+    "message": "Please review the road widening variation package: the Pareto options are OPT-NONE and OPT-A120. The kerb removal and re-laying item R-02-050 still needs a new rate under clause 13.3, and the current package should be checked before final valuation and issue of the PVR.",
+    "reason": "The person should be able to approve notifications to the planner, quantity surveyor and contracts about the open valuation issue.",
+    "proposed_by": "moderator",
+    "sent_at": "2026-10-25T08:01:03.505+00:00"
+  }
+]

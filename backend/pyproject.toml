@@ -15,7 +15,6 @@ dependencies = [
     "openai==3.37.0",
     "rank-bm25==0.2.2",
     "networkx==3.7",
-    "sse-starlette==3.5.0",
 ]
 
 [project.optional-dependencies]

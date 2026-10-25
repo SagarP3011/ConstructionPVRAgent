@@ -1,0 +1,59 @@
+{
+  "status": "approved",
+  "option_id": "OPT-A120",
+  "approved_action_ids": [
+    "ACT-001",
+    "ACT-002",
+    "ACT-003",
+    "ACT-004"
+  ],
+  "approver_name": "Sam Lee",
+  "approver_role": "Project Director",
+  "reason": "",
+  "timestamp": "2026-10-25T08:01:03.378+00:00",
+  "presented_options": [
+    "OPT-A120",
+    "OPT-NONE"
+  ],
+  "final_stances": {
+    "cost": "OPT-NONE",
+    "contract": null,
+    "time": "OPT-A120",
+    "commercial": "OPT-A120"
+  },
+  "executed": [
+    {
+      "action_id": "ACT-001",
+      "type": "create_task",
+      "files": [
+        "tasks.json"
+      ],
+      "executed_at": "2026-10-25T08:01:03.381+00:00"
+    },
+    {
+      "action_id": "ACT-002",
+      "type": "draft_pvr_form",
+      "files": [
+        "pvr_output_form.json",
+        "pvr_output_form.html"
+      ],
+      "executed_at": "2026-10-25T08:01:03.505+00:00"
+    },
+    {
+      "action_id": "ACT-003",
+      "type": "notify",
+      "files": [
+        "notifications.json"
+      ],
+      "executed_at": "2026-10-25T08:01:03.505+00:00"
+    },
+    {
+      "action_id": "ACT-004",
+      "type": "create_task",
+      "files": [
+        "tasks.json"
+      ],
+      "executed_at": "2026-10-25T08:01:03.505+00:00"
+    }
+  ]
+}

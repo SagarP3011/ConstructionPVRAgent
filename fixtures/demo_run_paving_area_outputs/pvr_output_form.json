@@ -1,0 +1,202 @@
+{
+  "form": "PVR output form",
+  "run_id": "R-20261025-080121-7c2e",
+  "project": {
+    "name": "Al Noor Gardens, Phase 2: Infrastructure and Landscaping Package",
+    "contract_ref": "ANG-P2-C01",
+    "contractor": "Delta Build Contracting LLC (fictional)",
+    "currency": "AED"
+  },
+  "change_request": {
+    "id": "CR-paving_area-1",
+    "change_type": "paving_area",
+    "title": "Add paving area",
+    "element": "hardscape",
+    "mode": "internal_what_if",
+    "parameters": [
+      {
+        "name": "added_area_m2",
+        "label": "Extra interlocking paving (m2)",
+        "value": 400.0,
+        "default": 400.0,
+        "min": 100.0,
+        "max": 1500.0,
+        "step": 50.0
+      }
+    ],
+    "fixed": {},
+    "instruction_text": "Add 400 m2 of interlocking paving to extend the community plaza.",
+    "variation_instruction": null,
+    "contractor_pvr": null
+  },
+  "quantities": {
+    "change_type": "paving_area",
+    "lines": [
+      {
+        "code": "L-05-050",
+        "description": "Interlocking paving, 80 mm",
+        "unit": "m2",
+        "old": 3600.0,
+        "new": 4000.0,
+        "delta": 400.0,
+        "basis": "interlocking paving area plus the added area"
+      },
+      {
+        "code": "L-05-060",
+        "description": "Granite paving at entrances",
+        "unit": "m2",
+        "old": 420.0,
+        "new": 420.0,
+        "delta": 0.0,
+        "basis": "granite paving area at entrances"
+      }
+    ],
+    "unaffected": [
+      {
+        "code": "L-05-060",
+        "description": "Granite paving at entrances",
+        "reason": "the added area is interlocking paving; granite paving is not extended"
+      }
+    ],
+    "requires_review": []
+  },
+  "cost": {
+    "change_type": "paving_area",
+    "lines": [
+      {
+        "code": "L-05-050",
+        "description": "Interlocking paving, 80 mm",
+        "unit": "m2",
+        "delta": 400.0,
+        "rate_aed": 92.0,
+        "amount_aed": 36800.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      }
+    ],
+    "rate_source": "BOQ rate, clause 13.3",
+    "direct_cost_aed": 36800.0,
+    "unpriced_items": []
+  },
+  "schedule_impact": {
+    "activities": [
+      {
+        "activity_id": "A420",
+        "name": "Hardscape paving",
+        "baseline_duration": 12,
+        "added_days": 2,
+        "new_duration": 14,
+        "items": [
+          {
+            "code": "L-05-050",
+            "delta": 400.0,
+            "productivity_per_day": 360.0,
+            "crew_days": 1.11
+          }
+        ]
+      }
+    ],
+    "total_added_days": 2,
+    "delay_without_acceleration_days": 0
+  },
+  "chosen_option": {
+    "option_id": "OPT-NONE",
+    "extra_crews_on": [],
+    "accelerated": [],
+    "completion_working_day": 87,
+    "completion_date": "2027-02-03",
+    "delay_working_days": 0,
+    "direct_cost_aed": 36800.0,
+    "acceleration_cost_aed": 0.0,
+    "time_related_cost_aed": 0.0,
+    "total_cost_aed": 36800.0,
+    "time_buffer_remaining_days": 20,
+    "contingency_remaining_aed": 28200.0,
+    "cost_above_no_crews_aed": 0.0,
+    "delay_saved_vs_no_crews_days": 0,
+    "critical_path": [
+      "A010",
+      "A020",
+      "A100",
+      "A110",
+      "A120",
+      "A130",
+      "A140",
+      "A150",
+      "A240",
+      "A900",
+      "A910",
+      "A920"
+    ]
+  },
+  "chosen_option_buffer": {
+    "option_id": "OPT-NONE",
+    "delay_working_days": 0,
+    "total_cost_aed": 36800.0,
+    "time_buffer_days": 20,
+    "contingency_aed": 65000.0,
+    "time_buffer_remaining_days": 20,
+    "contingency_remaining_aed": 28200.0,
+    "within_time_buffer": true,
+    "within_contingency": true,
+    "budget_uplift_needed_aed": 0.0,
+    "exceeds_employer_commitment": false
+  },
+  "presented_options": [
+    "OPT-NONE"
+  ],
+  "final_stances": {
+    "contract": null,
+    "cost": "OPT-NONE",
+    "time": "OPT-NONE",
+    "commercial": "OPT-NONE"
+  },
+  "clauses": [
+    {
+      "clause": "1.1",
+      "title": "Definitions"
+    },
+    {
+      "clause": "4.1",
+      "title": "Scope of the Works"
+    },
+    {
+      "clause": "8.4",
+      "title": "Extension of Time for Completion"
+    },
+    {
+      "clause": "8.5",
+      "title": "Time-Related Costs"
+    },
+    {
+      "clause": "8.6",
+      "title": "Acceleration"
+    },
+    {
+      "clause": "13.1",
+      "title": "Right to Vary"
+    },
+    {
+      "clause": "13.3",
+      "title": "Valuation of Variations"
+    },
+    {
+      "clause": "13.4",
+      "title": "Preliminaries and Overheads"
+    },
+    {
+      "clause": "20.1",
+      "title": "Contractor's Claims and Notices"
+    }
+  ],
+  "approver": {
+    "name": "Sam Lee",
+    "role": "Project Director",
+    "approved_at": "2026-10-25T08:02:44.067+00:00"
+  },
+  "verification": {
+    "messages_checked": 11,
+    "final_messages_passed": 10,
+    "final_messages_unresolved": 0,
+    "messages_corrected": 1
+  }
+}

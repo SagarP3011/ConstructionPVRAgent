@@ -1,0 +1,179 @@
+{
+  "report": "Verification of contractor claim",
+  "run_id": "R-20261025-080120-cd4b",
+  "claim": {
+    "pvr_ref": "PVR-023",
+    "instruction_ref": "VI-017",
+    "lines": [
+      {
+        "claimed_description": "Additional blockwork, 200 mm",
+        "matched_code": "B-04-010",
+        "boq_description": "Hollow concrete blockwork, 200 mm, boundary wall",
+        "unit": "m2",
+        "claimed_quantity": 200.0,
+        "assessed_quantity": 200.0,
+        "quantity_difference": 0.0,
+        "claimed_rate_aed": 125.0,
+        "boq_rate_aed": 95.0,
+        "rate_difference_aed": 30.0,
+        "claimed_amount_aed": 25000.0,
+        "assessed_amount_aed": 19000.0,
+        "amount_difference_aed": 6000.0,
+        "clause": "13.3"
+      },
+      {
+        "claimed_description": "Additional plaster, both faces",
+        "matched_code": "B-04-020",
+        "boq_description": "Cement sand plaster, 20 mm, both faces of boundary wall",
+        "unit": "m2",
+        "claimed_quantity": 400.0,
+        "assessed_quantity": 400.0,
+        "quantity_difference": 0.0,
+        "claimed_rate_aed": 40.0,
+        "boq_rate_aed": 32.0,
+        "rate_difference_aed": 8.0,
+        "claimed_amount_aed": 16000.0,
+        "assessed_amount_aed": 12800.0,
+        "amount_difference_aed": 3200.0,
+        "clause": "13.3"
+      },
+      {
+        "claimed_description": "Additional external paint",
+        "matched_code": "B-04-040",
+        "boq_description": "External emulsion paint, two coats, both faces of boundary wall",
+        "unit": "m2",
+        "claimed_quantity": 400.0,
+        "assessed_quantity": 400.0,
+        "quantity_difference": 0.0,
+        "claimed_rate_aed": 28.0,
+        "boq_rate_aed": 22.0,
+        "rate_difference_aed": 6.0,
+        "claimed_amount_aed": 11200.0,
+        "assessed_amount_aed": 8800.0,
+        "amount_difference_aed": 2400.0,
+        "clause": "13.3"
+      },
+      {
+        "claimed_description": "Additional stiffener column concrete",
+        "matched_code": "B-04-015",
+        "boq_description": "Reinforced concrete stiffener columns, 200 x 200 mm",
+        "unit": "m3",
+        "claimed_quantity": 2.02,
+        "assessed_quantity": 2.02,
+        "quantity_difference": 0.0,
+        "claimed_rate_aed": 1800.0,
+        "boq_rate_aed": 1450.0,
+        "rate_difference_aed": 350.0,
+        "claimed_amount_aed": 3636.0,
+        "assessed_amount_aed": 2929.0,
+        "amount_difference_aed": 707.0,
+        "clause": "13.3"
+      }
+    ],
+    "claimed_subtotal_aed": 55836.0,
+    "claimed_preliminaries_percent": 10.0,
+    "claimed_preliminaries_aed": 5583.6,
+    "allowed_preliminaries_aed": 0.0,
+    "claimed_total_aed": 61419.6,
+    "stated_total_matches_lines": true,
+    "assessed_direct_cost_aed": 43529.0,
+    "difference_direct_aed": 17890.6,
+    "claimed_extension_days": 21,
+    "assessed_extension_days_without_acceleration": 8,
+    "time_related_cost_per_day_aed": 2500.0,
+    "time_related_cost_if_extension_granted_aed": 20000.0,
+    "notice": {
+      "event_date": "2026-11-02",
+      "notice_date": "2026-11-04",
+      "calendar_days": 2,
+      "limit_days": 28,
+      "within_limit": true,
+      "clause": "20.1"
+    },
+    "adjustments": [
+      {
+        "item": "B-04-010 rate",
+        "claimed": 125.0,
+        "assessed": 95.0,
+        "difference": 30.0,
+        "unit": "AED per m2",
+        "clause": "13.3",
+        "reason": "Variations are valued at BOQ rates for work of similar character."
+      },
+      {
+        "item": "B-04-020 rate",
+        "claimed": 40.0,
+        "assessed": 32.0,
+        "difference": 8.0,
+        "unit": "AED per m2",
+        "clause": "13.3",
+        "reason": "Variations are valued at BOQ rates for work of similar character."
+      },
+      {
+        "item": "B-04-040 rate",
+        "claimed": 28.0,
+        "assessed": 22.0,
+        "difference": 6.0,
+        "unit": "AED per m2",
+        "clause": "13.3",
+        "reason": "Variations are valued at BOQ rates for work of similar character."
+      },
+      {
+        "item": "B-04-015 rate",
+        "claimed": 1800.0,
+        "assessed": 1450.0,
+        "difference": 350.0,
+        "unit": "AED per m3",
+        "clause": "13.3",
+        "reason": "Variations are valued at BOQ rates for work of similar character."
+      },
+      {
+        "item": "Preliminaries percentage",
+        "claimed": 5583.6,
+        "assessed": 0.0,
+        "difference": 5583.6,
+        "unit": "AED",
+        "clause": "13.4",
+        "reason": "BOQ rates include preliminaries; no percentage addition is allowed."
+      },
+      {
+        "item": "Extension of time",
+        "claimed": 21.0,
+        "assessed": 8.0,
+        "difference": 13.0,
+        "unit": "working days",
+        "clause": "8.4",
+        "reason": "Assessed on the critical path, taking account of float, without acceleration."
+      }
+    ]
+  },
+  "clauses": [
+    {
+      "clause": "13.3",
+      "title": "Valuation of Variations"
+    },
+    {
+      "clause": "13.4",
+      "title": "Preliminaries and Overheads"
+    },
+    {
+      "clause": "20.1",
+      "title": "Contractor's Claims and Notices"
+    },
+    {
+      "clause": "8.4",
+      "title": "Extension of Time for Completion"
+    }
+  ],
+  "agent_message_verification": {
+    "messages_checked": 18,
+    "final_messages_passed": 13,
+    "final_messages_unresolved": 0,
+    "messages_corrected": 5
+  },
+  "approver": {
+    "name": "Sam Lee",
+    "role": "Project Director",
+    "approved_at": "2026-10-25T08:02:39.916+00:00"
+  }
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "task_id": "ACT-004",
+    "title": "Check structural adequacy of revised wall height on Drawing L-201",
+    "description": "Review the revised wall height from 2.0 m to 2.5 m for structural adequacy and confirm whether any design change or reinforcement is required before final pricing is approved.",
+    "owner": "verifier",
+    "reason": "The contract findings identify a design adequacy question that still needs review.",
+    "proposed_by": "moderator",
+    "status": "open",
+    "created_at": "2026-10-25T08:02:40.130+00:00"
+  }
+]

@@ -1,0 +1,372 @@
+{
+  "form": "PVR output form",
+  "run_id": "R-20261025-080120-cd4b",
+  "project": {
+    "name": "Al Noor Gardens, Phase 2: Infrastructure and Landscaping Package",
+    "contract_ref": "ANG-P2-C01",
+    "contractor": "Delta Build Contracting LLC (fictional)",
+    "currency": "AED"
+  },
+  "change_request": {
+    "id": "CR-wall_height-1",
+    "change_type": "wall_height",
+    "title": "Raise the boundary wall",
+    "element": "boundary_wall",
+    "mode": "contractor_pvr",
+    "parameters": [
+      {
+        "name": "new_height_m",
+        "label": "New wall height (m)",
+        "value": 2.5,
+        "default": 2.5,
+        "min": 2.1,
+        "max": 3.0,
+        "step": 0.1
+      }
+    ],
+    "fixed": {
+      "current_height_m": 2.0,
+      "length_m": 400.0
+    },
+    "instruction_text": "Raise the boundary wall from 2.0 m to 2.5 m along 400 m of the community, as shown on Drawing L-201 Revision C.",
+    "variation_instruction": {
+      "ref": "VI-017",
+      "date": "2026-11-02",
+      "issued_by": "Engineer",
+      "text": "Raise the boundary wall from 2.0 m to 2.5 m along 400 m of the community, as shown on Drawing L-201 Revision C. Submit your assessment of cost and time impact."
+    },
+    "contractor_pvr": {
+      "ref": "PVR-023",
+      "date": "2026-11-04",
+      "contractor": "Delta Build Contracting LLC",
+      "subject": "Boundary wall height increase, VI-017",
+      "text": "Further to VI-017 we submit our potential variation for raising the boundary wall from 2.0 m to 2.5 m along 400 m. Our quotation and extension of time request are below.",
+      "claimed_lines": [
+        {
+          "description": "Additional blockwork, 200 mm",
+          "unit": "m2",
+          "quantity": 200.0,
+          "rate_aed": 125.0
+        },
+        {
+          "description": "Additional plaster, both faces",
+          "unit": "m2",
+          "quantity": 400.0,
+          "rate_aed": 40.0
+        },
+        {
+          "description": "Additional external paint",
+          "unit": "m2",
+          "quantity": 400.0,
+          "rate_aed": 28.0
+        },
+        {
+          "description": "Additional stiffener column concrete",
+          "unit": "m3",
+          "quantity": 2.02,
+          "rate_aed": 1800.0
+        }
+      ],
+      "claimed_preliminaries_percent": 10.0,
+      "claimed_total_aed": 61419.6,
+      "claimed_extension_working_days": 21
+    }
+  },
+  "quantities": {
+    "change_type": "wall_height",
+    "lines": [
+      {
+        "code": "B-04-010",
+        "description": "Hollow concrete blockwork, 200 mm, boundary wall",
+        "unit": "m2",
+        "old": 800.0,
+        "new": 1000.0,
+        "delta": 200.0,
+        "basis": "wall length x height"
+      },
+      {
+        "code": "B-04-015",
+        "description": "Reinforced concrete stiffener columns, 200 x 200 mm",
+        "unit": "m3",
+        "old": 8.08,
+        "new": 10.1,
+        "delta": 2.02,
+        "basis": "(floor(length / column spacing) + 1) x column section x height"
+      },
+      {
+        "code": "B-04-020",
+        "description": "Cement sand plaster, 20 mm, both faces of boundary wall",
+        "unit": "m2",
+        "old": 1600.0,
+        "new": 2000.0,
+        "delta": 400.0,
+        "basis": "wall length x height x faces"
+      },
+      {
+        "code": "B-04-040",
+        "description": "External emulsion paint, two coats, both faces of boundary wall",
+        "unit": "m2",
+        "old": 1600.0,
+        "new": 2000.0,
+        "delta": 400.0,
+        "basis": "wall length x height x faces"
+      },
+      {
+        "code": "B-04-030",
+        "description": "Precast concrete coping to boundary wall",
+        "unit": "m",
+        "old": 400.0,
+        "new": 400.0,
+        "delta": 0.0,
+        "basis": "wall length (coping sits on top of the wall)"
+      }
+    ],
+    "unaffected": [
+      {
+        "code": "B-04-030",
+        "description": "Precast concrete coping to boundary wall",
+        "reason": "coping is measured by wall length, which does not change with height"
+      }
+    ],
+    "requires_review": [
+      {
+        "code": "B-04-005",
+        "description": "Excavation for boundary wall foundation",
+        "reason": "footing designed for previous wall height; structural check needed",
+        "needs_new_rate": false
+      },
+      {
+        "code": "B-04-008",
+        "description": "Reinforced concrete strip footing, C35",
+        "reason": "footing designed for previous wall height; structural check needed",
+        "needs_new_rate": false
+      }
+    ]
+  },
+  "cost": {
+    "change_type": "wall_height",
+    "lines": [
+      {
+        "code": "B-04-010",
+        "description": "Hollow concrete blockwork, 200 mm, boundary wall",
+        "unit": "m2",
+        "delta": 200.0,
+        "rate_aed": 95.0,
+        "amount_aed": 19000.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      },
+      {
+        "code": "B-04-015",
+        "description": "Reinforced concrete stiffener columns, 200 x 200 mm",
+        "unit": "m3",
+        "delta": 2.02,
+        "rate_aed": 1450.0,
+        "amount_aed": 2929.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      },
+      {
+        "code": "B-04-020",
+        "description": "Cement sand plaster, 20 mm, both faces of boundary wall",
+        "unit": "m2",
+        "delta": 400.0,
+        "rate_aed": 32.0,
+        "amount_aed": 12800.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      },
+      {
+        "code": "B-04-040",
+        "description": "External emulsion paint, two coats, both faces of boundary wall",
+        "unit": "m2",
+        "delta": 400.0,
+        "rate_aed": 22.0,
+        "amount_aed": 8800.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      }
+    ],
+    "rate_source": "BOQ rate, clause 13.3",
+    "direct_cost_aed": 43529.0,
+    "unpriced_items": [
+      {
+        "code": "B-04-005",
+        "description": "Excavation for boundary wall foundation",
+        "reason": "footing designed for previous wall height; structural check needed",
+        "needs_new_rate": false,
+        "amount_aed": 0.0
+      },
+      {
+        "code": "B-04-008",
+        "description": "Reinforced concrete strip footing, C35",
+        "reason": "footing designed for previous wall height; structural check needed",
+        "needs_new_rate": false,
+        "amount_aed": 0.0
+      }
+    ]
+  },
+  "schedule_impact": {
+    "activities": [
+      {
+        "activity_id": "A320",
+        "name": "Boundary wall blockwork and stiffener columns",
+        "baseline_duration": 20,
+        "added_days": 6,
+        "new_duration": 26,
+        "items": [
+          {
+            "code": "B-04-010",
+            "delta": 200.0,
+            "productivity_per_day": 40.0,
+            "crew_days": 5.0
+          },
+          {
+            "code": "B-04-015",
+            "delta": 2.02,
+            "productivity_per_day": 4.0,
+            "crew_days": 0.51
+          }
+        ]
+      },
+      {
+        "activity_id": "A330",
+        "name": "Boundary wall plaster, both faces",
+        "baseline_duration": 20,
+        "added_days": 5,
+        "new_duration": 25,
+        "items": [
+          {
+            "code": "B-04-020",
+            "delta": 400.0,
+            "productivity_per_day": 80.0,
+            "crew_days": 5.0
+          }
+        ]
+      },
+      {
+        "activity_id": "A340",
+        "name": "Boundary wall external paint",
+        "baseline_duration": 10,
+        "added_days": 3,
+        "new_duration": 13,
+        "items": [
+          {
+            "code": "B-04-040",
+            "delta": 400.0,
+            "productivity_per_day": 160.0,
+            "crew_days": 2.5
+          }
+        ]
+      }
+    ],
+    "total_added_days": 14,
+    "delay_without_acceleration_days": 8
+  },
+  "chosen_option": {
+    "option_id": "OPT-A340",
+    "extra_crews_on": [
+      "A340"
+    ],
+    "accelerated": [
+      {
+        "activity_id": "A340",
+        "duration_before": 13,
+        "duration_after": 7,
+        "crew_cost_aed": 15600.0
+      }
+    ],
+    "completion_working_day": 89,
+    "completion_date": "2027-02-05",
+    "delay_working_days": 2,
+    "direct_cost_aed": 43529.0,
+    "acceleration_cost_aed": 15600.0,
+    "time_related_cost_aed": 5000.0,
+    "total_cost_aed": 64129.0,
+    "time_buffer_remaining_days": 18,
+    "contingency_remaining_aed": 871.0,
+    "cost_above_no_crews_aed": 600.0,
+    "delay_saved_vs_no_crews_days": 6,
+    "critical_path": [
+      "A010",
+      "A020",
+      "A300",
+      "A310",
+      "A320",
+      "A330",
+      "A335",
+      "A340",
+      "A910",
+      "A920"
+    ]
+  },
+  "chosen_option_buffer": {
+    "option_id": "OPT-A340",
+    "delay_working_days": 2,
+    "total_cost_aed": 64129.0,
+    "time_buffer_days": 20,
+    "contingency_aed": 65000.0,
+    "time_buffer_remaining_days": 18,
+    "contingency_remaining_aed": 871.0,
+    "within_time_buffer": true,
+    "within_contingency": true,
+    "budget_uplift_needed_aed": 0.0,
+    "exceeds_employer_commitment": false
+  },
+  "presented_options": [
+    "OPT-A320",
+    "OPT-A340",
+    "OPT-NONE"
+  ],
+  "final_stances": {
+    "cost": "OPT-NONE",
+    "contract": null,
+    "time": "OPT-A320-A330-A340",
+    "commercial": "OPT-A340"
+  },
+  "clauses": [
+    {
+      "clause": "1.1",
+      "title": "Definitions"
+    },
+    {
+      "clause": "4.1",
+      "title": "Scope of the Works"
+    },
+    {
+      "clause": "8.4",
+      "title": "Extension of Time for Completion"
+    },
+    {
+      "clause": "8.5",
+      "title": "Time-Related Costs"
+    },
+    {
+      "clause": "8.6",
+      "title": "Acceleration"
+    },
+    {
+      "clause": "13.1",
+      "title": "Right to Vary"
+    },
+    {
+      "clause": "13.3",
+      "title": "Valuation of Variations"
+    },
+    {
+      "clause": "13.4",
+      "title": "Preliminaries and Overheads"
+    },
+    {
+      "clause": "20.1",
+      "title": "Contractor's Claims and Notices"
+    }
+  ],
+  "approver": {
+    "name": "Sam Lee",
+    "role": "Project Director",
+    "approved_at": "2026-10-25T08:02:39.916+00:00"
+  },
+  "verification": {
+    "messages_checked": 18,
+    "final_messages_passed": 13,
+    "final_messages_unresolved": 0,
+    "messages_corrected": 5
+  }
+}

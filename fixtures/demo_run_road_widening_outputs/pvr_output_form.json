@@ -1,0 +1,392 @@
+{
+  "form": "PVR output form",
+  "run_id": "R-20261025-075739-9105",
+  "project": {
+    "name": "Al Noor Gardens, Phase 2: Infrastructure and Landscaping Package",
+    "contract_ref": "ANG-P2-C01",
+    "contractor": "Delta Build Contracting LLC (fictional)",
+    "currency": "AED"
+  },
+  "change_request": {
+    "id": "CR-road_widening-1",
+    "change_type": "road_widening",
+    "title": "Widen the internal road",
+    "element": "internal_road",
+    "mode": "internal_what_if",
+    "parameters": [
+      {
+        "name": "widen_by_m",
+        "label": "Extra road width (m)",
+        "value": 1.0,
+        "default": 1.0,
+        "min": 0.5,
+        "max": 2.0,
+        "step": 0.5
+      },
+      {
+        "name": "length_m",
+        "label": "Length to widen (m)",
+        "value": 600.0,
+        "default": 600.0,
+        "min": 100.0,
+        "max": 1500.0,
+        "step": 100.0
+      }
+    ],
+    "fixed": {},
+    "instruction_text": "Widen the internal road by 1.0 m over 600 m to add a drop-off lane.",
+    "variation_instruction": null,
+    "contractor_pvr": null
+  },
+  "quantities": {
+    "change_type": "road_widening",
+    "lines": [
+      {
+        "code": "R-02-010",
+        "description": "Excavation for roads in any material",
+        "unit": "m3",
+        "old": 9600.0,
+        "new": 10080.0,
+        "delta": 480.0,
+        "basis": "road area x excavation depth"
+      },
+      {
+        "code": "R-02-020",
+        "description": "Subgrade preparation and compaction",
+        "unit": "m2",
+        "old": 12000.0,
+        "new": 12600.0,
+        "delta": 600.0,
+        "basis": "road area (subgrade (area))"
+      },
+      {
+        "code": "R-02-030",
+        "description": "Granular sub-base, 200 mm",
+        "unit": "m2",
+        "old": 12000.0,
+        "new": 12600.0,
+        "delta": 600.0,
+        "basis": "road area (sub-base (area))"
+      },
+      {
+        "code": "R-02-040",
+        "description": "Aggregate base course, 150 mm",
+        "unit": "m2",
+        "old": 12000.0,
+        "new": 12600.0,
+        "delta": 600.0,
+        "basis": "road area (base course (area))"
+      },
+      {
+        "code": "R-02-060",
+        "description": "Asphalt binder course, 60 mm",
+        "unit": "m2",
+        "old": 12000.0,
+        "new": 12600.0,
+        "delta": 600.0,
+        "basis": "road area (asphalt binder (area))"
+      },
+      {
+        "code": "R-02-070",
+        "description": "Asphalt wearing course, 40 mm",
+        "unit": "m2",
+        "old": 12000.0,
+        "new": 12600.0,
+        "delta": 600.0,
+        "basis": "road area (asphalt wearing (area))"
+      },
+      {
+        "code": "R-02-080",
+        "description": "Thermoplastic road markings",
+        "unit": "m",
+        "old": 4800.0,
+        "new": 4800.0,
+        "delta": 0.0,
+        "basis": "road markings follow the road length"
+      }
+    ],
+    "unaffected": [
+      {
+        "code": "R-02-080",
+        "description": "Thermoplastic road markings",
+        "reason": "road markings follow the road length, which does not change"
+      }
+    ],
+    "requires_review": [
+      {
+        "code": "R-02-050",
+        "description": "Precast concrete kerbs",
+        "reason": "kerb line moves over the widened length; removal and re-laying has no BOQ rate, so a new rate is needed (clause 13.3)",
+        "needs_new_rate": true
+      }
+    ]
+  },
+  "cost": {
+    "change_type": "road_widening",
+    "lines": [
+      {
+        "code": "R-02-010",
+        "description": "Excavation for roads in any material",
+        "unit": "m3",
+        "delta": 480.0,
+        "rate_aed": 18.0,
+        "amount_aed": 8640.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      },
+      {
+        "code": "R-02-020",
+        "description": "Subgrade preparation and compaction",
+        "unit": "m2",
+        "delta": 600.0,
+        "rate_aed": 9.0,
+        "amount_aed": 5400.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      },
+      {
+        "code": "R-02-030",
+        "description": "Granular sub-base, 200 mm",
+        "unit": "m2",
+        "delta": 600.0,
+        "rate_aed": 28.0,
+        "amount_aed": 16800.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      },
+      {
+        "code": "R-02-040",
+        "description": "Aggregate base course, 150 mm",
+        "unit": "m2",
+        "delta": 600.0,
+        "rate_aed": 32.0,
+        "amount_aed": 19200.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      },
+      {
+        "code": "R-02-060",
+        "description": "Asphalt binder course, 60 mm",
+        "unit": "m2",
+        "delta": 600.0,
+        "rate_aed": 48.0,
+        "amount_aed": 28800.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      },
+      {
+        "code": "R-02-070",
+        "description": "Asphalt wearing course, 40 mm",
+        "unit": "m2",
+        "delta": 600.0,
+        "rate_aed": 36.0,
+        "amount_aed": 21600.0,
+        "rate_source": "BOQ rate, clause 13.3"
+      }
+    ],
+    "rate_source": "BOQ rate, clause 13.3",
+    "direct_cost_aed": 100440.0,
+    "unpriced_items": [
+      {
+        "code": "R-02-050",
+        "description": "Precast concrete kerbs",
+        "reason": "kerb line moves over the widened length; removal and re-laying has no BOQ rate, so a new rate is needed (clause 13.3)",
+        "needs_new_rate": true,
+        "amount_aed": 0.0
+      }
+    ]
+  },
+  "schedule_impact": {
+    "activities": [
+      {
+        "activity_id": "A100",
+        "name": "Road excavation",
+        "baseline_duration": 16,
+        "added_days": 1,
+        "new_duration": 17,
+        "items": [
+          {
+            "code": "R-02-010",
+            "delta": 480.0,
+            "productivity_per_day": 600.0,
+            "crew_days": 0.8
+          }
+        ]
+      },
+      {
+        "activity_id": "A110",
+        "name": "Subgrade preparation",
+        "baseline_duration": 8,
+        "added_days": 1,
+        "new_duration": 9,
+        "items": [
+          {
+            "code": "R-02-020",
+            "delta": 600.0,
+            "productivity_per_day": 1500.0,
+            "crew_days": 0.4
+          }
+        ]
+      },
+      {
+        "activity_id": "A120",
+        "name": "Sub-base and base course",
+        "baseline_duration": 10,
+        "added_days": 1,
+        "new_duration": 11,
+        "items": [
+          {
+            "code": "R-02-030",
+            "delta": 600.0,
+            "productivity_per_day": 2400.0,
+            "crew_days": 0.25
+          },
+          {
+            "code": "R-02-040",
+            "delta": 600.0,
+            "productivity_per_day": 2400.0,
+            "crew_days": 0.25
+          }
+        ]
+      },
+      {
+        "activity_id": "A140",
+        "name": "Asphalt binder course",
+        "baseline_duration": 5,
+        "added_days": 1,
+        "new_duration": 6,
+        "items": [
+          {
+            "code": "R-02-060",
+            "delta": 600.0,
+            "productivity_per_day": 2400.0,
+            "crew_days": 0.25
+          }
+        ]
+      },
+      {
+        "activity_id": "A150",
+        "name": "Asphalt wearing course",
+        "baseline_duration": 4,
+        "added_days": 1,
+        "new_duration": 5,
+        "items": [
+          {
+            "code": "R-02-070",
+            "delta": 600.0,
+            "productivity_per_day": 3000.0,
+            "crew_days": 0.2
+          }
+        ]
+      }
+    ],
+    "total_added_days": 5,
+    "delay_without_acceleration_days": 5
+  },
+  "chosen_option": {
+    "option_id": "OPT-A120",
+    "extra_crews_on": [
+      "A120"
+    ],
+    "accelerated": [
+      {
+        "activity_id": "A120",
+        "duration_before": 11,
+        "duration_after": 6,
+        "crew_cost_aed": 13800.0
+      }
+    ],
+    "completion_working_day": 87,
+    "completion_date": "2027-02-03",
+    "delay_working_days": 0,
+    "direct_cost_aed": 100440.0,
+    "acceleration_cost_aed": 13800.0,
+    "time_related_cost_aed": 0.0,
+    "total_cost_aed": 114240.0,
+    "time_buffer_remaining_days": 20,
+    "contingency_remaining_aed": -49240.0,
+    "cost_above_no_crews_aed": 1300.0,
+    "delay_saved_vs_no_crews_days": 5,
+    "critical_path": [
+      "A010",
+      "A020",
+      "A100",
+      "A110",
+      "A120",
+      "A130",
+      "A140",
+      "A150",
+      "A240",
+      "A900",
+      "A910",
+      "A920"
+    ]
+  },
+  "chosen_option_buffer": {
+    "option_id": "OPT-A120",
+    "delay_working_days": 0,
+    "total_cost_aed": 114240.0,
+    "time_buffer_days": 20,
+    "contingency_aed": 65000.0,
+    "time_buffer_remaining_days": 20,
+    "contingency_remaining_aed": -49240.0,
+    "within_time_buffer": true,
+    "within_contingency": false,
+    "budget_uplift_needed_aed": 49240.0,
+    "exceeds_employer_commitment": false
+  },
+  "presented_options": [
+    "OPT-A120",
+    "OPT-NONE"
+  ],
+  "final_stances": {
+    "cost": "OPT-NONE",
+    "contract": null,
+    "time": "OPT-A120",
+    "commercial": "OPT-A120"
+  },
+  "clauses": [
+    {
+      "clause": "1.1",
+      "title": "Definitions"
+    },
+    {
+      "clause": "4.1",
+      "title": "Scope of the Works"
+    },
+    {
+      "clause": "8.4",
+      "title": "Extension of Time for Completion"
+    },
+    {
+      "clause": "8.5",
+      "title": "Time-Related Costs"
+    },
+    {
+      "clause": "8.6",
+      "title": "Acceleration"
+    },
+    {
+      "clause": "13.1",
+      "title": "Right to Vary"
+    },
+    {
+      "clause": "13.3",
+      "title": "Valuation of Variations"
+    },
+    {
+      "clause": "13.4",
+      "title": "Preliminaries and Overheads"
+    },
+    {
+      "clause": "20.1",
+      "title": "Contractor's Claims and Notices"
+    }
+  ],
+  "approver": {
+    "name": "Sam Lee",
+    "role": "Project Director",
+    "approved_at": "2026-10-25T08:01:03.378+00:00"
+  },
+  "verification": {
+    "messages_checked": 13,
+    "final_messages_passed": 13,
+    "final_messages_unresolved": 0,
+    "messages_corrected": 0
+  }
+}

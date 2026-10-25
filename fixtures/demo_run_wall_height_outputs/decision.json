@@ -1,0 +1,61 @@
+{
+  "status": "approved",
+  "option_id": "OPT-A340",
+  "approved_action_ids": [
+    "ACT-001",
+    "ACT-002",
+    "ACT-003",
+    "ACT-004"
+  ],
+  "approver_name": "Sam Lee",
+  "approver_role": "Project Director",
+  "reason": "",
+  "timestamp": "2026-10-25T08:02:39.916+00:00",
+  "presented_options": [
+    "OPT-A320",
+    "OPT-A340",
+    "OPT-NONE"
+  ],
+  "final_stances": {
+    "cost": "OPT-NONE",
+    "contract": null,
+    "time": "OPT-A320-A330-A340",
+    "commercial": "OPT-A340"
+  },
+  "executed": [
+    {
+      "action_id": "ACT-001",
+      "type": "draft_pvr_form",
+      "files": [
+        "pvr_output_form.json",
+        "pvr_output_form.html"
+      ],
+      "executed_at": "2026-10-25T08:02:40.034+00:00"
+    },
+    {
+      "action_id": "ACT-002",
+      "type": "draft_verification_report",
+      "files": [
+        "verification_report.json",
+        "verification_report.html"
+      ],
+      "executed_at": "2026-10-25T08:02:40.130+00:00"
+    },
+    {
+      "action_id": "ACT-003",
+      "type": "notify",
+      "files": [
+        "notifications.json"
+      ],
+      "executed_at": "2026-10-25T08:02:40.130+00:00"
+    },
+    {
+      "action_id": "ACT-004",
+      "type": "create_task",
+      "files": [
+        "tasks.json"
+      ],
+      "executed_at": "2026-10-25T08:02:40.130+00:00"
+    }
+  ]
+}

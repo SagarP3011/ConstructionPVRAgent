@@ -61,12 +61,43 @@ Press Ctrl+C in the dev window to stop both servers.
 | `.venv\Scripts\python.exe -m pvr.cli engines` | Deterministic assessment of the three default changes (no LLM) |
 | `.venv\Scripts\python.exe -m pvr.cli agent cost --change wall_height` | One agent alone, live |
 | `.venv\Scripts\python.exe -m pvr.cli run --change wall_height` | Full seven-agent run; pauses for your approval, then executes the approved actions |
+| `.venv\Scripts\python.exe -m pvr.cli save-fixture R-...` | Save a completed, approved run as `fixtures/demo_run_<change_type>.jsonl` (plus its outputs) |
 
 `run` also takes `--param name=value`, `--mode internal_what_if|contractor_pvr`, and for unattended use
 `--approve OPT-... --approver "Name" --role "Role"` or `--reject "reason"`. Each run writes its full event trace to
 `runs/<run_id>/events.jsonl`; approved actions write their files to `runs/<run_id>/outputs/`.
 
+## API (backend on :8000)
+
+| Method and path | Purpose |
+|---|---|
+| `GET /api/health` | Health check; `live_runs_available` says whether an API key is set |
+| `GET /api/change-types`, `GET /api/data/{name}` | Change types and data files |
+| `POST /api/runs` | Start a live run: `{"change_type": "...", "parameters": {...}, "mode": "...", "overrides": {...}}` |
+| `GET /api/runs/{id}/events` | Server-Sent Events: the run's events live (history first) |
+| `GET /api/runs/{id}` | Run state snapshot (also for stored runs and fixtures) |
+| `POST /api/runs/{id}/approve` | `{"option_id", "action_ids", "approver_name", "approver_role"}` |
+| `POST /api/runs/{id}/reject` | `{"approver_name", "approver_role", "reason"}` |
+| `GET /api/runs/{id}/outputs/{file}` | Files written by approved actions |
+| `GET /api/runs` | Fixtures and stored runs |
+| `GET /api/replay/{id}?speed=1.0&max_gap=3` | SSE replay of a stored run or fixture with its original timing; needs no API key |
+
+Each SSE message is one event (`id:` is the event id, `data:` the event JSON). A stream ends with a named `end`
+event. To resume, send `Last-Event-ID` (or `?after=E-...`); replay accepts the same, so a client can change speed
+mid-replay by reconnecting. Replay caps each pause at `max_gap` seconds (before speed) so slow model calls and the
+approval wait do not stall the demo; `max_gap=0` gives the exact original timing.
+
+Watch a live run from a terminal:
+
+```
+curl -s -X POST http://127.0.0.1:8000/api/runs -H "Content-Type: application/json" -d "{\"change_type\":\"paving_area\"}"
+curl -N http://127.0.0.1:8000/api/runs/<run_id>/events
+```
+
+A run waiting for approval is held in server memory; after a restart its trace remains but it can no longer be
+approved.
+
 ## Build status
 
-Built in phases (SPEC section 16). Phases 0 to 3 are in place: scaffold, deterministic engines, tools and facts,
-and the full multi-agent orchestration in the console.
+Built in phases (SPEC section 16). Phases 0 to 4 are in place: scaffold, deterministic engines, tools and facts,
+the full multi-agent orchestration, and the API with live streaming, run store and replay (fixtures in `fixtures/`).

@@ -1,0 +1,14 @@
+[
+  {
+    "notification_id": "ACT-003",
+    "recipients": [
+      "planner",
+      "quantity_surveyor",
+      "contracts"
+    ],
+    "message": "Please note the evaluated PVR options for the paving-area variation. The Pareto option is OPT-NONE; OPT-A420 adds cost without delay benefit. Please review the open issue on valuation of BOQ item L-05-050 and confirm whether the existing rate applies under clause 13.3 or whether a new rate is needed.",
+    "reason": "The person should be able to approve notifications to the planner, quantity surveyor and contracts so they can act on the evaluated result and the open valuation issue.",
+    "proposed_by": "moderator",
+    "sent_at": "2026-10-25T08:02:44.145+00:00"
+  }
+]

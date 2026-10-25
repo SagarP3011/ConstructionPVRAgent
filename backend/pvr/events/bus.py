@@ -1,4 +1,4 @@
-"""Event bus: every event of a run goes through here to its sinks (trace file, console, SSE in Phase 4)."""
+"""Event bus: every event of a run goes through here to its sinks (trace file, console, SSE streams)."""
 
 from __future__ import annotations
 
@@ -25,6 +25,23 @@ class EventBus:
     def add_sink(self, sink: Sink) -> None:
         with self._lock:
             self._sinks.append(sink)
+
+    def subscribe(self, sink: Sink) -> list[Event]:
+        """Add a sink and return the events so far, atomically: the subscriber sees every event exactly
+        once, the history from the returned list and everything later through the sink."""
+        with self._lock:
+            self._sinks.append(sink)
+            return list(self.events)
+
+    def history(self) -> list[Event]:
+        """A copy of the events so far."""
+        with self._lock:
+            return list(self.events)
+
+    def remove_sink(self, sink: Sink) -> None:
+        with self._lock:
+            if sink in self._sinks:
+                self._sinks.remove(sink)
 
     def emit(self, type_: str, payload: dict[str, Any] | None = None) -> Event:
         with self._lock:

@@ -54,6 +54,15 @@ class EventBus:
                 sink(event)
         return event
 
+    def restore(self, events: list[Event]) -> None:
+        """Take over recorded events as they are (ids and times kept) and pass them to the sinks.
+        Used when a recorded run is brought back to its decision; later events continue the numbering."""
+        with self._lock:
+            for event in events:
+                self.events.append(event)
+                for sink in self._sinks:
+                    sink(event)
+
     def of_type(self, type_: str) -> list[Event]:
         """Events of one type, in order."""
         with self._lock:

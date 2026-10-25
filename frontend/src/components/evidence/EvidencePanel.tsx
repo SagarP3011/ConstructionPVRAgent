@@ -17,7 +17,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 /** Left column: the change, the drawing or parameter diff, the BOQ lines and the cited clauses. */
 export function EvidencePanel() {
   return (
-    <Panel title="Evidence">
+    <Panel title="Evidence" hint="What the agents work from: the change request, the drawing revisions, the bill of quantities and the contract clauses.">
       <div className="flex flex-col gap-5">
         <ChangeCard />
         <DrawingDiff />

@@ -44,7 +44,7 @@ export function OutputsPanel() {
   if (!runId) return null;
   if (state.executed.length === 0) {
     return (
-      <Panel title="Outputs">
+      <Panel title="Outputs" hint="The documents written after approval: the PVR form, the verification report, tasks and notifications.">
         {state.status === "completed" ? (
           <EmptyState message="No actions were approved." />
         ) : state.status === "rejected" ? (
@@ -59,7 +59,7 @@ export function OutputsPanel() {
   }
 
   return (
-    <Panel title="Outputs" right={<span className="text-xs text-text-muted">Written after approval</span>}>
+    <Panel title="Outputs" hint="The documents written after approval: the PVR form, the verification report, tasks and notifications." right={<span className="text-xs text-text-muted">Written after approval</span>}>
       <div className="grid grid-cols-2 gap-4">
         {files.has("pvr_output_form.html") ? (
           <PvrFormPreview runId={runId} file="pvr_output_form.html" title="PVR output form" />

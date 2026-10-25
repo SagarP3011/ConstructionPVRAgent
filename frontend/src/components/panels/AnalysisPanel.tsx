@@ -10,6 +10,13 @@ import { OptionsPanel } from "./OptionsPanel";
 const TABS = ["Cost", "Schedule", "Buffer", "Options"] as const;
 type Tab = (typeof TABS)[number];
 
+const TAB_HINT: Record<Tab, string> = {
+  Cost: "What the change costs at contract rates, from the cost engine; in a contractor PVR, set against the claim.",
+  Schedule: "The programme before and after the change: which activities move, and by how many working days.",
+  Buffer: "How much time buffer and cost contingency each option leaves. Red means overrun.",
+  Options: "Every way of delivering the change that the agents evaluated, with its cost and delay.",
+};
+
 /** Right column: cost, schedule, buffer and options, each filled from tool results as they arrive. */
 export function AnalysisPanel() {
   const { state } = useRoom();
@@ -37,7 +44,7 @@ export function AnalysisPanel() {
   };
 
   return (
-    <Panel title="Analysis" right={<Tabs tabs={TABS} active={tab} onChange={choose} label="Analysis views" marked={marked} />}>
+    <Panel title="Analysis" hint={TAB_HINT[tab]} right={<Tabs tabs={TABS} active={tab} onChange={choose} label="Analysis views" marked={marked} />}>
       {tab === "Cost" ? <CostPanel /> : null}
       {tab === "Schedule" ? <GanttPanel /> : null}
       {tab === "Buffer" ? <BufferPanel /> : null}

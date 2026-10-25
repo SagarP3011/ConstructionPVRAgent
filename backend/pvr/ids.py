@@ -20,6 +20,11 @@ class IdGen:
             self._counters[prefix] = n
         return f"{prefix}-{n:0{width}d}"
 
+    def resume(self, prefix: str, count: int) -> None:
+        """Continue numbering after `count` ids already used (a run restored from its recording)."""
+        with self._lock:
+            self._counters[prefix] = max(self._counters.get(prefix, 0), count)
+
 
 def new_run_id() -> str:
     """Run id such as R-20261024-153012-a1b2 (UTC time plus a random suffix)."""

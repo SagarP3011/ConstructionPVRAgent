@@ -84,6 +84,7 @@ Press Ctrl+C in the dev window to stop both servers.
 | `GET /api/runs/{id}/outputs/{file}` | Files written by approved actions |
 | `GET /api/runs` | Fixtures and stored runs |
 | `GET /api/replay/{id}?speed=1.0&max_gap=3` | SSE replay of a stored run or fixture with its original timing; needs no API key |
+| `POST /api/replay/{id}/decision` | Bring a recorded run back to its approval gate as a new run, so a person decides again; replay that run, then approve or reject it like a live run. Needs no API key |
 
 Each SSE message is one event (`id:` is the event id, `data:` the event JSON). A stream ends with a named `end`
 event. To resume, send `Last-Event-ID` (or `?after=E-...`); replay accepts the same, so a client can change speed
@@ -105,7 +106,10 @@ approved.
 A full seven-agent run calls the model about 30 to 55 times (roughly 150,000 to 300,000 prompt tokens). Every
 completed run is stored in `runs/` and can be replayed exactly, with no model calls, from **Replay a saved run**.
 When the change, size and mode you choose match a saved run, the start screen also offers **Replay saved run
-(no cost)** next to **Run agents**. Recommended: record the runs you plan to show once (`save-fixture`, with
+(no cost)** next to **Run agents**. A replay plays the recording up to the decision and then stops: the person in
+the room chooses any presented option and approves, and the outputs are written for that choice. The step after
+approval is code only, so this needs no model calls either. (A recording that never reached a decision plays as
+recorded.) Recommended: record the runs you plan to show once (`save-fixture`, with
 `--name` for variants), present those as replays, and run live only for a change the audience asks for.
 
 Typed requests ("Describe the change in your own words") cost one small model call each. The Intake agent only
@@ -123,6 +127,9 @@ below except steps 2 and 9 works from the recorded demo runs ("Replay a saved ru
 2. **Let Aldar pick.** Pick a card, or let them type the change in their own words and confirm the reading. If they
    have no preference: Raise the boundary wall, 2.5 m, Contractor PVR mode. Click **Run agents**, or **Replay saved
    run (no cost)**.
+   On first open a short guide, "What am I looking at?", explains the screen; reopen it with **?** in the header. The
+   run opens in the simple view (agents, timeline, what is happening now, decision); **Show details** adds the
+   evidence, the Cost, Schedule, Buffer and Options tabs and What-if. Use details for steps 4 to 6 and 9.
 3. **Agent Room.** Point at Intake, then Contract, Cost and Time working in parallel (pulsing nodes, tool sparks), and
    an agent asking another a question (a "?" flying between them, an Answer in the timeline).
 4. **Schedule tab.** Added days against float: the wall chain has 14 added days, 6 of them absorbed by float, so
@@ -134,7 +141,8 @@ below except steps 2 and 9 works from the recorded demo runs ("Replay a saved ru
    the number came from ("Computed by a deterministic engine"). "Show this tool call in the trace" opens the trace
    at that call. Where a message failed a check, the corrected message shows the original struck through.
 7. **Decision.** Up to three options with delay, completion, total cost, buffer and contingency left, and the agents
-   behind each. Tick the actions, enter a name and role, and approve. Nothing ran before this.
+   behind each. Tick the actions, enter a name and role, and approve. Nothing ran before this. On a replay the run
+   stops here too, so let Aldar choose the option.
 8. **Outputs.** PVR output form (Print to PDF), verification report (contractor mode), tasks and notifications.
 9. **A second change.** New change, then Widen the internal road (critical path: every day counts) or Add paving
    area (float absorbs it; the debate ends after one round). Same agents, different analysis. Or use **What-if** to

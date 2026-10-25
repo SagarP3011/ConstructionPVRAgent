@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 
 interface PanelProps {
   title: string;
+  /** One line under the heading that says what the panel shows, in plain English. */
+  hint?: string;
   children?: ReactNode;
   className?: string;
   /** Content on the right of the heading (tabs, counts, buttons). */
@@ -13,14 +15,17 @@ interface PanelProps {
 }
 
 /** Bordered card with a heading, used for every layout area. The body scrolls. */
-export function Panel({ title, children, className = "", right, padded = true, scroll = true }: PanelProps) {
+export function Panel({ title, hint, children, className = "", right, padded = true, scroll = true }: PanelProps) {
   return (
     <section
       className={`flex min-h-0 flex-col rounded-card border border-border bg-bg ${className}`}
       aria-label={title}
     >
       <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2.5">
-        <h2 className="text-sm">{title}</h2>
+        <div className="min-w-0">
+          <h2 className="text-sm">{title}</h2>
+          {hint ? <p className="text-[11px] leading-snug text-text-muted">{hint}</p> : null}
+        </div>
         {right}
       </div>
       <div className={`flex min-h-0 flex-1 flex-col ${scroll ? "overflow-y-auto" : "overflow-hidden"} ${padded ? "p-4" : ""}`}>

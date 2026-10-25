@@ -32,6 +32,7 @@ from pvr.events.store import find_outputs_dir, find_trace, is_safe_id, read_even
 from pvr.llm.client import LLMError
 from pvr.models import Event, Mode, Overrides
 from pvr.orchestrator.approvals import ApprovalError
+from pvr.orchestrator.decision_replay import DecisionReplayError
 
 PING_SECONDS = 15.0
 MIN_SLEEP_SECONDS = 0.01  # replay sends events due sooner than this without sleeping
@@ -102,8 +103,10 @@ def sse_response(body: AsyncIterator[str]) -> StreamingResponse:
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
-async def stream_live(bus: EventBus, after: str | None) -> AsyncIterator[str]:
-    """History first, then each new event as the run emits it, until the run ends."""
+async def stream_live(bus: EventBus, after: str | None, speed: float | None = None,
+                      max_gap_s: float = 3.0) -> AsyncIterator[str]:
+    """History first, then each new event as the run emits it, until the run ends. With `speed`, the
+    history is paced like a replay (a decision replay plays its recording, then waits for the decision)."""
     loop = asyncio.get_running_loop()
     queue: asyncio.Queue[Event] = asyncio.Queue()
 
@@ -113,9 +116,16 @@ async def stream_live(bus: EventBus, after: str | None) -> AsyncIterator[str]:
         except RuntimeError:  # the client's event loop is gone; the finally below removes this sink
             pass
 
-    history = bus.subscribe(sink)
+    history = events_after(bus.subscribe(sink), after)
+    delays = replay_delays(history, speed, max_gap_s) if speed else [0.0] * len(history)
+    start = loop.time()
+    due = 0.0
     try:
-        for event in events_after(history, after):
+        for event, delay in zip(history, delays):
+            due += delay
+            wait = start + due - loop.time()
+            if wait > MIN_SLEEP_SECONDS:
+                await asyncio.sleep(wait)
             yield sse_event(event)
             if is_terminal(event):
                 yield sse_end(event.type)
@@ -290,12 +300,30 @@ def create_app(manager: RunManager | None = None) -> FastAPI:
         after: str | None = None,
         last_event_id: str | None = Header(default=None),
     ) -> StreamingResponse:
-        """SSE replay of a stored run or fixture with its original timing. Needs no API key."""
+        """SSE replay of a stored run or fixture with its original timing. Needs no API key. For a decision
+        replay held by the server, the recording plays with its timing and the stream then waits for the
+        decision, like a live run."""
+        live = runs.get(trace_id)
+        if live is not None:
+            return sse_response(stream_live(live.bus, last_event_id or after, speed, max_gap))
         path = find_trace(trace_id, runs.runs_dir, runs.fixtures_dir)
         if path is None:
             raise HTTPException(404, f"No stored run or fixture {trace_id}")
         stored = events_after(read_events(path), last_event_id or after)
         return sse_response(stream_stored(stored, replay_delays(stored, speed, max_gap)))
+
+    @app.post("/api/replay/{trace_id}/decision", response_model=StartRunResponse, status_code=201)
+    def replay_to_decision(trace_id: str) -> StartRunResponse:
+        """Bring a recorded run back to its approval gate as a new run, so a person takes the decision
+        again. Replay the new run with `/api/replay/{run_id}`; approve it like a live run. Needs no API key."""
+        try:
+            live = runs.replay_to_decision(trace_id)
+        except DecisionReplayError as exc:
+            raise HTTPException(409, str(exc)) from None
+        if live is None:
+            raise HTTPException(404, f"No stored run or fixture {trace_id}")
+        rid = live.run_id
+        return StartRunResponse(run_id=rid, events_url=f"/api/replay/{rid}", snapshot_url=f"/api/runs/{rid}")
 
     return app
 

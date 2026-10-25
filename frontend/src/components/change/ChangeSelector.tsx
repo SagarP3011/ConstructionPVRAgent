@@ -67,7 +67,10 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
       .catch((e: unknown) => setLoadError(e instanceof Error ? e.message : "Could not load the change types"));
     api
       .listRuns()
-      .then((all) => setSavedRuns(all.filter((r) => r.kind === "full" && ["completed", "rejected"].includes(r.state))))
+      // Decisions taken on a replay stay on disk but are not listed again: replay the original instead.
+      .then((all) =>
+        setSavedRuns(all.filter((r) => r.kind === "full" && !r.replay_of && ["completed", "rejected"].includes(r.state))),
+      )
       .catch((e: unknown) => setSavedError(e instanceof Error ? e.message : "Could not load saved runs"));
   }, []);
 
@@ -229,7 +232,7 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
                     type="button"
                     onClick={() => onReplay(savedMatch.id)}
                     className="rounded-full border border-accent px-5 py-2.5 text-sm font-semibold text-accent hover:bg-accent hover:text-white"
-                    title="Replays a recorded run of exactly this change: no model calls, no cost"
+                    title="Replays a recorded run of exactly this change and pauses for your decision: no model calls, no cost"
                   >
                     Replay saved run (no cost)
                   </button>

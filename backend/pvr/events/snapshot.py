@@ -21,6 +21,7 @@ class RunSnapshot(BaseModel):
     state: RunState = "running"
     live: bool = False  # True while the server holds the run in memory (only then can it be approved)
     context: dict[str, Any] = Field(default_factory=dict)
+    replay_of: str | None = None  # a decision replay: the recorded run it was brought back from
     model: str | None = None
     model_light: str | None = None
     stage: str | None = None
@@ -57,6 +58,7 @@ def run_snapshot(events: list[Event], run_id: str = "") -> RunSnapshot:
         if t == "run.started":
             snap.kind = p.get("kind", "full")
             snap.context = p.get("context", {})
+            snap.replay_of = p.get("replay_of")
             snap.model, snap.model_light = p.get("model"), p.get("model_light")
             snap.started_at = event.ts
         elif t == "stage.started":

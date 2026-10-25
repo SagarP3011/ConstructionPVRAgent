@@ -26,7 +26,7 @@ function actionDetail(a: Action): string {
 
 /** Stage 6: a named person chooses one option and the actions to execute, then approves or rejects. */
 export function DecisionPanel() {
-  const { state, isReplay } = useRoom();
+  const { state, isReplay, decisionReplay } = useRoom();
   const [choice, setChoice] = useState<string | null>(null);
   const [ticked, setTicked] = useState<string[]>([]);
   const [name, setName] = useState("");
@@ -39,7 +39,7 @@ export function DecisionPanel() {
   const options = state.finalOptions ?? [];
   const actions = state.actionOrder.map((id) => state.actions[id]).filter((a): a is Action => Boolean(a));
   const waiting = state.status === "awaiting_approval" && !decided;
-  const canDecide = waiting && !isReplay;
+  const canDecide = waiting && (!isReplay || decisionReplay);
 
   // Tick every proposed action by default once the request arrives.
   useEffect(() => {
@@ -48,7 +48,7 @@ export function DecisionPanel() {
 
   if (!state.approvalRequested && !decided) {
     return (
-      <Panel title="Decision">
+      <Panel title="Decision" hint="The options worth choosing between. A named person picks one and approves it; nothing is executed before that.">
         <Waiting message="The options are prepared for a person to decide after the debate." />
       </Panel>
     );
@@ -85,9 +85,16 @@ export function DecisionPanel() {
   return (
     <Panel
       title="Decision"
+      hint="The options worth choosing between. A named person picks one and approves it; nothing is executed before that."
       right={
         <span className="text-xs text-text-muted">
-          {waiting && isReplay ? "Replay: the recorded decision follows" : waiting ? "Waiting for your decision" : ""}
+          {waiting && isReplay && !decisionReplay
+            ? "Replay: the recorded decision follows"
+            : waiting && isReplay
+              ? "Replay paused: waiting for your decision"
+              : waiting
+                ? "Waiting for your decision"
+                : ""}
         </span>
       }
     >

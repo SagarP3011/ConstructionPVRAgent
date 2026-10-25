@@ -19,20 +19,39 @@ const BACKEND_DOT: Record<BackendState, string> = {
 
 export const SPEEDS = [0.5, 1, 2] as const;
 
+export type RoomView = "simple" | "details";
+
 interface HeaderProps {
   backend: BackendState;
   context: RunContext | null;
   stage: StageId | null;
   stagesDone: string[];
-  replay: boolean;
+  /** "replay" while a recording plays; "decide" when it pauses for the viewer's decision. */
+  replay: "replay" | "decide" | null;
   speed: number;
+  view: RoomView;
+  onView: (view: RoomView) => void;
+  onGuide: () => void;
   onSpeed: (speed: number) => void;
   onNewChange: (() => void) | null;
   onTrace: (() => void) | null;
 }
 
 /** App header: title, notice, the current change, stage progress, speed control and New change. */
-export function Header({ backend, context, stage, stagesDone, replay, speed, onSpeed, onNewChange, onTrace }: HeaderProps) {
+export function Header({
+  backend,
+  context,
+  stage,
+  stagesDone,
+  replay,
+  speed,
+  view,
+  onView,
+  onGuide,
+  onSpeed,
+  onNewChange,
+  onTrace,
+}: HeaderProps) {
   return (
     <header className="flex items-center justify-between gap-6 border-b border-border bg-bg px-6 py-3">
       <div className="min-w-0">
@@ -45,7 +64,7 @@ export function Header({ backend, context, stage, stagesDone, replay, speed, onS
               .map(([k, v]) => `${k.replace(/_/g, " ")} ${v}`)
               .join(", ")}{" "}
             · {context.mode === "contractor_pvr" ? "contractor PVR (potential variation request)" : "internal what-if"}
-            {replay ? " · replay" : ""}
+            {replay === "decide" ? " · replay of a saved run, you decide" : replay ? " · replay" : ""}
           </p>
         ) : null}
       </div>
@@ -69,6 +88,16 @@ export function Header({ backend, context, stage, stagesDone, replay, speed, onS
             ))}
           </div>
         ) : null}
+        {context ? (
+          <button
+            type="button"
+            onClick={() => onView(view === "simple" ? "details" : "simple")}
+            aria-pressed={view === "details"}
+            className="rounded-full border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-tint"
+          >
+            {view === "simple" ? "Show details" : "Simple view"}
+          </button>
+        ) : null}
         {onTrace ? (
           <button
             type="button"
@@ -87,6 +116,15 @@ export function Header({ backend, context, stage, stagesDone, replay, speed, onS
             New change
           </button>
         ) : null}
+        <button
+          type="button"
+          onClick={onGuide}
+          aria-label="What am I looking at?"
+          title="What am I looking at?"
+          className="flex h-7 w-7 items-center justify-center rounded-full border border-accent text-sm font-semibold text-accent hover:bg-accent hover:text-white"
+        >
+          ?
+        </button>
         <div className="flex items-center gap-2 text-xs text-text-muted" role="status">
           <span className={`h-2 w-2 rounded-full ${BACKEND_DOT[backend]}`} aria-hidden="true" />
           {BACKEND_LABEL[backend]}

@@ -37,6 +37,8 @@ export interface StoredRun {
   ended_at: string | null;
   event_count: number;
   chosen_option: string | null;
+  /** A decision replay: the recorded run it was brought back from. */
+  replay_of: string | null;
 }
 
 /** What-if limits for a run; null keeps the project's value. */
@@ -131,6 +133,11 @@ export const api = {
   listRuns: () => request<StoredRun[]>("/api/runs"),
   startRun: (body: StartRunBody) =>
     request<{ run_id: string; events_url: string }>("/api/runs", { method: "POST", body: JSON.stringify(body) }),
+  /** Bring a recorded run back to its decision as a new run; replay that run and decide it. */
+  replayToDecision: (traceId: string) =>
+    request<{ run_id: string; events_url: string }>(`/api/replay/${encodeURIComponent(traceId)}/decision`, {
+      method: "POST",
+    }),
   approve: (runId: string, body: ApproveBody) =>
     request<{ status: string; executed_actions: unknown[] }>(`/api/runs/${encodeURIComponent(runId)}/approve`, {
       method: "POST",
@@ -156,7 +163,7 @@ export function outputUrl(runId: string, file: string): string {
 
 export type StreamSource =
   | { kind: "live"; runId: string }
-  | { kind: "replay"; traceId: string; speed: number };
+  | { kind: "replay"; traceId: string; speed: number; /** pauses for a person's decision */ decide?: boolean };
 
 export function streamUrl(source: StreamSource, after: string | null): string {
   const query = new URLSearchParams();

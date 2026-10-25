@@ -7,6 +7,8 @@ import type { RunState } from "./runStore";
 export interface RoomValue {
   state: RunState;
   isReplay: boolean;
+  /** A replay that stops at the approval gate for the viewer's decision (rather than the recorded one). */
+  decisionReplay: boolean;
   speed: number;
   project: ProjectInfo | null;
   contractClauses: Clause[];

@@ -125,3 +125,23 @@ test("a saved run of the same change and size can be replayed at no cost", async
   fireEvent.click(screen.getByRole("button", { name: /Raise the boundary wall/ }));
   expect(screen.queryByRole("button", { name: "Replay saved run (no cost)" })).not.toBeInTheDocument();
 });
+
+test("the guide opens on the first visit, steps through, and reopens from the ? button", async () => {
+  window.localStorage.clear();
+  stubBackend(true);
+  const { unmount } = render(<App />);
+  const guide = screen.getByRole("dialog", { name: "What am I looking at?" });
+  expect(guide).toHaveTextContent("What this is");
+  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+  expect(guide).toHaveTextContent("The Agent Room");
+  fireEvent.click(screen.getByRole("button", { name: "Skip" }));
+  expect(await screen.findByRole("button", { name: /Raise the boundary wall/ })).toBeInTheDocument();
+  await vi.waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+  unmount();
+
+  // Seen once: not shown again on the next visit, but the ? button opens it.
+  render(<App />);
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "What am I looking at?" }));
+  expect(screen.getByRole("dialog", { name: "What am I looking at?" })).toBeInTheDocument();
+});

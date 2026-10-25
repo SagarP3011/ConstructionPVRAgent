@@ -20,6 +20,7 @@ from pvr.llm.client import LLM, OpenAILLM
 from pvr.models import ProjectData, RunContext
 from pvr.orchestrator.actions import ExecutedAction
 from pvr.orchestrator.approvals import Decision
+from pvr.orchestrator.decision_replay import restore_for_decision
 from pvr.orchestrator.orchestrator import Orchestrator, RunAborted, start_run
 
 LLMFactory = Callable[[Settings], LLM]
@@ -100,6 +101,20 @@ class RunManager:
             live.bus.emit("run.error", {"error": error, "fatal": True, "stage": live.orchestrator.session.stage})
             live.close()
 
+    def replay_to_decision(self, trace_id: str) -> LiveRun | None:
+        """A new run holding a recorded run up to its approval request, waiting for a person's decision.
+        None for an unknown trace; raises DecisionReplayError when the recording never reached a decision.
+        Needs no API key: nothing after the approval gate calls the language model."""
+        path = find_trace(trace_id, self.runs_dir, self.fixtures_dir)
+        if path is None:
+            return None
+        orchestrator, sink = restore_for_decision(read_events(path), trace_id, self.data, self.settings,
+                                                  runs_dir=self.runs_dir)
+        live = LiveRun(orchestrator, sink)
+        with self._lock:
+            self._runs[live.run_id] = live
+        return live
+
     # --- approval -----------------------------------------------------------------------------------
 
     def _awaiting(self, run_id: str) -> LiveRun:
@@ -164,7 +179,7 @@ class RunManager:
                 "id": trace_id, "source": source, "run_id": snap.run_id, "kind": snap.kind, "state": snap.state,
                 "live": snap.live, "change_type": snap.context.get("change_type"),
                 "parameters": snap.context.get("parameters"), "mode": snap.context.get("mode"),
-                "overrides": snap.context.get("overrides"),
+                "overrides": snap.context.get("overrides"), "replay_of": snap.replay_of,
                 "started_at": snap.started_at, "ended_at": snap.ended_at, "event_count": snap.event_count,
                 "chosen_option": (snap.decision or {}).get("option_id"),
             })

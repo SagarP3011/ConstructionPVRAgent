@@ -50,6 +50,10 @@ def test_fixture_is_a_good_complete_run(change_type: str) -> None:
     assert not [e for e in events if e.type == "verification.result" and e.payload["unresolved"]]
     assert not [e for e in events if e.type == "run.error"]
 
+    baseline = [e for e in events if e.type == "tool.result" and e.payload["agent"] == "orchestrator"
+                and e.payload["tool"] == "run_cpm"]
+    assert len(baseline) == 1, "the baseline reference run for the Gantt chart is missing"
+
     rounds = snap.debate["rounds"]
     if len(golden_pareto(change_type)) == 1:
         assert rounds == 1 and snap.debate["stop_reason"] == "single_pareto_option"

@@ -1,6 +1,6 @@
 {
   "form": "PVR output form",
-  "run_id": "R-20261025-080120-cd4b",
+  "run_id": "R-20261025-083953-fa58",
   "project": {
     "name": "Al Noor Gardens, Phase 2: Infrastructure and Landscaping Package",
     "contract_ref": "ANG-P2-C01",
@@ -315,9 +315,9 @@
     "OPT-NONE"
   ],
   "final_stances": {
+    "time": "OPT-A320-A330",
     "cost": "OPT-NONE",
     "contract": null,
-    "time": "OPT-A320-A330-A340",
     "commercial": "OPT-A340"
   },
   "clauses": [
@@ -361,12 +361,12 @@
   "approver": {
     "name": "Sam Lee",
     "role": "Project Director",
-    "approved_at": "2026-10-25T08:02:39.916+00:00"
+    "approved_at": "2026-10-25T08:41:13.922+00:00"
   },
   "verification": {
-    "messages_checked": 18,
+    "messages_checked": 17,
     "final_messages_passed": 13,
     "final_messages_unresolved": 0,
-    "messages_corrected": 5
+    "messages_corrected": 4
   }
 }

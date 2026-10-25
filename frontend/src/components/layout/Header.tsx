@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { fetchHealth } from "../../api/health";
+import { CHANGE_LABEL } from "../../format";
+import type { RunContext } from "../../api/events";
 import { StageProgress } from "./StageProgress";
+import type { StageId } from "./stages";
 
-type BackendState = "checking" | "connected" | "unreachable";
+export type BackendState = "checking" | "connected" | "unreachable";
 
 const BACKEND_LABEL: Record<BackendState, string> = {
   checking: "Checking backend",
@@ -16,30 +17,70 @@ const BACKEND_DOT: Record<BackendState, string> = {
   unreachable: "bg-alert",
 };
 
-/** App header: title, proof-of-concept notice, stage progress and backend status. */
-export function Header() {
-  const [backend, setBackend] = useState<BackendState>("checking");
+export const SPEEDS = [0.5, 1, 2] as const;
 
-  useEffect(() => {
-    const controller = new AbortController();
-    fetchHealth(controller.signal)
-      .then((h) => setBackend(h.status === "ok" ? "connected" : "unreachable"))
-      .catch((err: unknown) => {
-        if (!(err instanceof DOMException && err.name === "AbortError")) setBackend("unreachable");
-      });
-    return () => controller.abort();
-  }, []);
+interface HeaderProps {
+  backend: BackendState;
+  context: RunContext | null;
+  stage: StageId | null;
+  stagesDone: string[];
+  replay: boolean;
+  speed: number;
+  onSpeed: (speed: number) => void;
+  onNewChange: (() => void) | null;
+}
 
+/** App header: title, notice, the current change, stage progress, speed control and New change. */
+export function Header({ backend, context, stage, stagesDone, replay, speed, onSpeed, onNewChange }: HeaderProps) {
   return (
-    <header className="flex items-center justify-between gap-6 border-b border-border bg-bg px-8 py-4">
-      <div>
+    <header className="flex items-center justify-between gap-6 border-b border-border bg-bg px-6 py-3">
+      <div className="min-w-0">
         <h1 className="text-xl">PVR Agent Room</h1>
-        <p className="text-sm text-text-muted">Proof of concept by Sekuen, prepared for Aldar. Illustrative data.</p>
+        <p className="text-xs text-text-muted">Proof of concept by Sekuen, prepared for Aldar. Illustrative data.</p>
+        {context ? (
+          <p className="mt-0.5 truncate text-xs font-semibold text-accent">
+            {CHANGE_LABEL[context.change_type] ?? context.change_type}:{" "}
+            {Object.entries(context.parameters)
+              .map(([k, v]) => `${k.replace(/_/g, " ")} ${v}`)
+              .join(", ")}{" "}
+            · {context.mode === "contractor_pvr" ? "contractor PVR (potential variation request)" : "internal what-if"}
+            {replay ? " · replay" : ""}
+          </p>
+        ) : null}
       </div>
-      <StageProgress current={null} />
-      <div className="flex items-center gap-2 text-xs text-text-muted" role="status">
-        <span className={`h-2 w-2 rounded-full ${BACKEND_DOT[backend]}`} aria-hidden="true" />
-        {BACKEND_LABEL[backend]}
+
+      <StageProgress current={stage} done={stagesDone} />
+
+      <div className="flex shrink-0 items-center gap-4">
+        {context ? (
+          <div className="flex items-center gap-1 text-xs" role="group" aria-label="Speed">
+            <span className="mr-1 text-text-muted">Speed</span>
+            {SPEEDS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => onSpeed(s)}
+                aria-pressed={speed === s}
+                className={`rounded-full px-2 py-0.5 ${speed === s ? "bg-accent text-white" : "text-text-muted hover:text-accent"}`}
+              >
+                {s}x
+              </button>
+            ))}
+          </div>
+        ) : null}
+        {onNewChange ? (
+          <button
+            type="button"
+            onClick={onNewChange}
+            className="rounded-full border border-accent px-4 py-1.5 text-xs font-semibold text-accent hover:bg-accent hover:text-white"
+          >
+            New change
+          </button>
+        ) : null}
+        <div className="flex items-center gap-2 text-xs text-text-muted" role="status">
+          <span className={`h-2 w-2 rounded-full ${BACKEND_DOT[backend]}`} aria-hidden="true" />
+          {BACKEND_LABEL[backend]}
+        </div>
       </div>
     </header>
   );

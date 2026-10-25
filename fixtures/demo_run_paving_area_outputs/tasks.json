@@ -1,22 +1,12 @@
 [
   {
-    "task_id": "ACT-001",
-    "title": "Confirm valuation rate for additional interlocking paving",
-    "description": "Review BOQ item L-05-050 against the added 400.0 m2 of interlocking paving on drawing L-301 and confirm whether the existing BOQ rate applies under clause 13.3, or whether a new rate must be agreed because no similar item exists. Also confirm whether the rate already includes bedding sand and edge restraints as noted on the drawing comparison.",
-    "owner": "commercial",
-    "reason": "Clause 13.3 requires valuation by BOQ rates where the work is of similar character and executed under similar conditions, and new rates only where no similar item exists.",
-    "proposed_by": "contract",
-    "status": "open",
-    "created_at": "2026-10-25T08:02:44.071+00:00"
-  },
-  {
-    "task_id": "ACT-004",
-    "title": "Confirm valuation rate for additional interlocking paving",
-    "description": "Review BOQ item L-05-050 against the added 400.0 m2 of interlocking paving on drawing L-301 and confirm whether the existing BOQ rate applies under clause 13.3, or whether a new rate must be agreed because no similar item exists. Also confirm whether the rate already includes bedding sand and edge restraints as noted on the drawing comparison.",
-    "owner": "commercial",
-    "reason": "This open issue was identified in the blackboard and has no separate pending task beyond the existing one; it should remain visible to the decision maker as an open issue to review.",
+    "task_id": "ACT-003",
+    "title": "Review whether any design check is needed for the revised paving instruction",
+    "description": "Confirm whether the revised paving drawing or any interface with entrances requires a design check before issue. The commercial review says no items need review, but this should be confirmed if the Engineer issues a revised drawing under clause 13.1.",
+    "owner": "contract",
+    "reason": "Every item an agent said needs review, a new rate or a design check is an open issue; this creates the task for the design-check item.",
     "proposed_by": "moderator",
     "status": "open",
-    "created_at": "2026-10-25T08:02:44.145+00:00"
+    "created_at": "2026-10-25T08:40:43.814+00:00"
   }
 ]

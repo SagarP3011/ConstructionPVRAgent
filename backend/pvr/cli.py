@@ -145,7 +145,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     from pvr.engines.common import EngineError
     from pvr.llm.client import LLMError, OpenAILLM
     from pvr.orchestrator.approvals import ApprovalError
-    from pvr.orchestrator.orchestrator import start_run
+    from pvr.orchestrator.orchestrator import RunAborted, start_run
     from pvr.report import aed, day
 
     settings = load_settings()
@@ -199,6 +199,9 @@ def cmd_run(args: argparse.Namespace) -> int:
         executed = orch.approve(option, actions, name or "", role or "")
         print(f"\nApproved {option} by {name} ({role}). Executed {len(executed)} action(s).")
         print(f"Outputs: {s.run_dir / 'outputs'}")
+    except RunAborted as exc:
+        print(f"Run stopped: {exc}", file=sys.stderr)
+        return 1
     except (ApprovalError, ValueError, IndexError) as exc:
         print(f"Approval error: {exc}", file=sys.stderr)
         return 1

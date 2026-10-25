@@ -1,12 +1,22 @@
 [
   {
     "task_id": "ACT-004",
-    "title": "Check structural adequacy of revised wall height on Drawing L-201",
-    "description": "Review the revised wall height from 2.0 m to 2.5 m for structural adequacy and confirm whether any design change or reinforcement is required before final pricing is approved.",
-    "owner": "verifier",
-    "reason": "The contract findings identify a design adequacy question that still needs review.",
+    "title": "Check design adequacy of revised boundary wall note",
+    "description": "Review the revised drawing note for the boundary wall and confirm whether the design change is adequate under clause 4.1 and clause 13.1, or whether further design revision is required.",
+    "owner": "contract",
+    "reason": "The contract findings state that a design question remains open and needs review.",
     "proposed_by": "moderator",
     "status": "open",
-    "created_at": "2026-10-25T08:02:40.130+00:00"
+    "created_at": "2026-10-25T08:41:14.074+00:00"
+  },
+  {
+    "task_id": "ACT-005",
+    "title": "Review structural items B-04-005 and B-04-008 for pricing",
+    "description": "Carry out the structural review required for BOQ items B-04-005 and B-04-008 and confirm whether any new rate is needed or whether existing BOQ rates apply under clause 13.3.",
+    "owner": "verifier",
+    "reason": "The cost assessment says these items need structural review and no new rate is priced now.",
+    "proposed_by": "moderator",
+    "status": "open",
+    "created_at": "2026-10-25T08:41:14.075+00:00"
   }
 ]

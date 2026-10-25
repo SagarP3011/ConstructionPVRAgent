@@ -31,6 +31,7 @@ class AgentTurn(BaseModel):
     steps: int
     forced: bool = False
     error: str = ""
+    model_unavailable: bool = False  # the model could not be reached (quota, network); the run cannot go on
     prompt_tokens: int = 0
     completion_tokens: int = 0
 
@@ -203,7 +204,7 @@ def _run_turn(
         return finish("failed", error=f"No post_message after {limit} steps and one reminder")
     except LLMError as exc:
         session.bus.emit("run.error", {"agent": spec.name, "error": str(exc)})
-        return finish("failed", error=str(exc))
+        return finish("failed", error=str(exc)).model_copy(update={"model_unavailable": True})
 
 
 def message_json(message: AgentMessage) -> str:

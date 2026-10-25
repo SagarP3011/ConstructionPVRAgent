@@ -20,7 +20,7 @@ from pvr.llm.client import LLM, OpenAILLM
 from pvr.models import ProjectData, RunContext
 from pvr.orchestrator.actions import ExecutedAction
 from pvr.orchestrator.approvals import Decision
-from pvr.orchestrator.orchestrator import Orchestrator, start_run
+from pvr.orchestrator.orchestrator import Orchestrator, RunAborted, start_run
 
 LLMFactory = Callable[[Settings], LLM]
 
@@ -70,6 +70,8 @@ class RunManager:
         self.llm_factory = llm_factory
         self.data = data or get_data()
         self._runs: dict[str, LiveRun] = {}
+        # Snapshots of stored traces, keyed by (path, size, modified time): a finished trace never changes.
+        self._snapshots: dict[tuple[str, int, int], RunSnapshot] = {}
         self._lock = threading.Lock()
 
     # --- starting and running -----------------------------------------------------------------------
@@ -89,6 +91,8 @@ class RunManager:
     def _run_stages(self, live: LiveRun) -> None:
         try:
             live.orchestrator.run_until_approval()
+        except RunAborted:
+            live.close()  # the orchestrator has emitted the fatal error
         except Exception as exc:  # noqa: BLE001 - any failure ends the run with a visible error event
             error = (str(exc) or type(exc).__name__)
             if self.settings.openai_api_key:
@@ -137,7 +141,17 @@ class RunManager:
         if live is not None:
             return live.snapshot()
         path = find_trace(trace_id, self.runs_dir, self.fixtures_dir)
-        return run_snapshot(read_events(path), trace_id) if path else None
+        if path is None:
+            return None
+        stat = path.stat()
+        key = (str(path), stat.st_size, stat.st_mtime_ns)
+        with self._lock:
+            cached = self._snapshots.get(key)
+        if cached is None:
+            cached = run_snapshot(read_events(path), trace_id)
+            with self._lock:
+                self._snapshots[key] = cached
+        return cached.model_copy(deep=True)
 
     def list_runs(self) -> list[dict[str, object]]:
         """Fixtures and stored runs with a short summary each."""

@@ -218,6 +218,22 @@ def test_post_message_records_envelope() -> None:
     assert not bad_intent.ok
 
 
+def test_stance_and_proposals_must_be_evaluated_options() -> None:
+    session = make_session("paving_area")
+
+    def post(**fields: object) -> str:
+        args = {"to": "all", "intent": "ASSESS", "content": "x", **fields}
+        outcome = REGISTRY.dispatch(session, "post_message", args, agent="cost")
+        return "" if outcome.ok else outcome.error
+
+    assert "OPT-UNKNOWN was not evaluated" in post(stance="OPT-UNKNOWN")
+    assert "none yet" in post(proposals=["OPT-NONE"])
+    assert not session.messages  # a refused message is not posted
+    assert REGISTRY.dispatch(session, "evaluate_option", {"extra_crews_on": []}, agent="time").ok
+    assert post(stance="OPT-NONE", proposals=["OPT-NONE"]) == ""
+    assert "OPT-A420 was not evaluated" in post(stance="OPT-A420")
+
+
 def test_post_message_guards() -> None:
     session = make_session("paving_area")
 

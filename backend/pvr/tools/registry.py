@@ -359,6 +359,11 @@ def _post_message(session: RunSession, args: PostMessageArgs, agent: str) -> dic
     reserved = {"VERIFY": "verifier", "SUMMARISE": "moderator"}
     if args.intent in reserved and agent != reserved[args.intent]:
         raise EngineError(f"Only the {reserved[args.intent]} agent posts {args.intent} messages")
+    unknown = [o for o in ([args.stance] if args.stance else []) + args.proposals if o not in session.evaluated_options]
+    if unknown:
+        evaluated = ", ".join(sorted(session.evaluated_options)) or "none yet"
+        raise EngineError(f"{', '.join(unknown)} was not evaluated in this run. Stance and proposals must be "
+                          f"evaluated option ids (so far: {evaluated}), or leave them empty")
     content, inline = extract_citations(args.content, session.facts)
     message = AgentMessage(
         message_id=session.ids.next("M"), run_id=session.run_id, stage=session.stage, round=session.round,

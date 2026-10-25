@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import threading
 from collections.abc import AsyncIterator
 from typing import Any
 
@@ -152,6 +153,9 @@ def create_app(manager: RunManager | None = None) -> FastAPI:
     app = FastAPI(title="PVR Agent Room", version=__version__)
     runs = manager or RunManager(load_settings())
     app.state.runs = runs
+    if manager is None:
+        # Read the stored traces once in the background, so the first run listing is quick.
+        threading.Thread(target=runs.list_runs, name="warm-run-store", daemon=True).start()
 
     # The Vite dev server proxies /api, but allow direct calls from it too.
     app.add_middleware(

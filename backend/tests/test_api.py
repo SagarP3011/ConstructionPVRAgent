@@ -17,7 +17,7 @@ from fake_room import Room
 from pvr.api.main import create_app
 from pvr.api.runs import RunManager
 from pvr.events.store import read_events, replay_delays, save_fixture
-from pvr.llm.client import LLM, LLMResponse
+from pvr.llm.client import LLM, LLMError, LLMResponse
 from pvr.models import Event
 
 PARETO = {"paving_area": ["OPT-NONE"], "wall_height": ["OPT-A320", "OPT-A340", "OPT-NONE"]}
@@ -222,6 +222,21 @@ def test_unknown_runs_return_404(harness: Harness) -> None:
         assert harness.client.get(path).status_code == 404, path
     person = {"approver_name": "A", "approver_role": "B"}
     assert harness.client.post("/api/runs/R-nope/approve", json={"option_id": "OPT-NONE", **person}).status_code == 409
+
+
+def test_an_unreachable_model_fails_the_run_instead_of_asking_for_approval(tmp_path: Path) -> None:
+    class NoQuota:
+        def complete(self, **_: Any) -> LLMResponse:
+            raise LLMError("RateLimitError: insufficient_quota")
+
+    manager = RunManager(fake_settings(openai_api_key="k"), runs_dir=tmp_path / "runs",
+                         fixtures_dir=tmp_path / "fixtures", llm_factory=lambda _s: NoQuota())
+    client = TestClient(create_app(manager))
+    run_id = client.post("/api/runs", json={"change_type": "paving_area"}).json()["run_id"]
+    events, reason = read_sse(client, f"/api/runs/{run_id}/events")
+    assert reason == "run.error" and "could not reach the language model" in events[-1].payload["error"]
+    assert "approval.requested" not in [e.type for e in events]
+    assert client.get(f"/api/runs/{run_id}").json()["state"] == "failed"
 
 
 def test_a_failing_run_ends_with_a_fatal_error(tmp_path: Path) -> None:

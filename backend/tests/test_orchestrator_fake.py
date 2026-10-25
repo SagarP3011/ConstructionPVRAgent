@@ -16,7 +16,8 @@ from pvr.engines.change import make_context
 from pvr.llm.fake import tool_call
 from pvr.orchestrator.approvals import ApprovalError
 from pvr.orchestrator.context import TurnState, current_turn
-from pvr.orchestrator.orchestrator import Orchestrator, start_run
+from pvr.llm.client import LLMError
+from pvr.orchestrator.orchestrator import Orchestrator, RunAborted, start_run
 from pvr.tools.registry import REGISTRY
 
 GOLDEN = json.loads(GOLDEN_PATH.read_text(encoding="utf-8"))
@@ -92,6 +93,43 @@ def test_no_action_before_approval_then_artifacts_after(tmp_path: Path) -> None:
     order = types(orch)
     assert order.index("approval.granted") < order.index("action.executed")
     assert order[-1] == "run.completed"
+
+
+def test_baseline_reference_run_for_the_ui_stays_off_the_blackboard(tmp_path: Path) -> None:
+    room = Room()
+    orch = new_run(tmp_path, "paving_area", room)
+    orch.run_until_approval()
+    results = [e.payload for e in orch.session.bus.of_type("tool.result")
+               if e.payload["tool"] == "run_cpm" and e.payload["agent"] == "orchestrator"]
+    assert len(results) == 1
+    assert results[0]["result"]["completion_working_day"] == GOLDEN["baseline"]["completion_working_day"]
+    called = next(e.payload for e in orch.session.bus.of_type("tool.called")
+                  if e.payload["tool_call_id"] == results[0]["tool_call_id"])
+    assert called["args"] == {"include_change_durations": False}
+    schedule = orch.session.blackboard.read("schedule_impact")
+    # The fake Time agent never calls run_cpm, so the blackboard has none: the baseline run was not recorded.
+    assert schedule is None or "run_cpm" not in schedule.content
+    assert all(e.payload["agent"] != "orchestrator" or e.payload["tool"] in ("run_cpm", "read_blackboard")
+               for e in orch.session.bus.of_type("tool.called"))
+
+
+def test_unreachable_model_stops_the_run_before_approval(tmp_path: Path) -> None:
+    class NoQuota:
+        def complete(self, **_: Any) -> Any:
+            raise LLMError("RateLimitError: insufficient_quota")
+
+    data = get_data()
+    orch, sink = start_run(make_context(data, "paving_area"), data, fake_settings(), NoQuota(), runs_dir=tmp_path,
+                           concurrent=False)
+    with pytest.raises(RunAborted, match="intake agent could not reach the language model"):
+        orch.run_until_approval()
+    sink.close()
+    assert orch.state == "failed"
+    fatal = [e.payload for e in orch.session.bus.of_type("run.error") if e.payload.get("fatal")]
+    assert len(fatal) == 1 and fatal[0]["stage"] == "intake"
+    assert not orch.session.bus.of_type("approval.requested")
+    with pytest.raises(ApprovalError):
+        orch.approve("OPT-NONE", [], "Sam Lee", "Project Director")
 
 
 def test_reject_executes_nothing(tmp_path: Path) -> None:

@@ -5,6 +5,8 @@ export interface HealthResponse {
   version: string;
   data_dir_found: boolean;
   golden_found: boolean;
+  /** An OpenAI key is configured; replays work without one. */
+  live_runs_available?: boolean;
 }
 
 export async function fetchHealth(signal?: AbortSignal): Promise<HealthResponse> {

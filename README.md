@@ -99,5 +99,9 @@ approved.
 
 ## Build status
 
-Built in phases (SPEC section 16). Phases 0 to 4 are in place: scaffold, deterministic engines, tools and facts,
-the full multi-agent orchestration, and the API with live streaming, run store and replay (fixtures in `fixtures/`).
+Built in phases (SPEC section 16). Phases 0 to 5 are in place: scaffold, deterministic engines, tools and facts,
+the full multi-agent orchestration, the API with live streaming, run store and replay (fixtures in `fixtures/`), and
+the web app: change selector, Agent Room, evidence, analysis tabs, decision and outputs, for live runs and replays.
+
+For a demo, serve the production build (smoother than the dev server): `npm run build` then `npx vite preview` in
+`frontend/`, with the backend running; open http://localhost:4173.

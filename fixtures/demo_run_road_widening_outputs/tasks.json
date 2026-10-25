@@ -1,22 +1,22 @@
 [
   {
-    "task_id": "ACT-001",
-    "title": "Agree new rate for kerb removal and re-laying on widened road section",
-    "description": "The variation widens internal road R-101 over 600 m and shifts the kerb line. The BOQ has no rate for kerb removal and re-laying (R-02-050), so a new rate must be agreed under clause 13.3 before valuation can be finalised.",
-    "owner": "commercial",
-    "reason": "Clause 13.3 requires a new rate only where no similar item exists; the kerb work has no BOQ rate and needs commercial agreement.",
-    "proposed_by": "contract",
+    "task_id": "ACT-003",
+    "title": "Review new rate for kerb removal and re-laying (R-02-050)",
+    "description": "Confirm the valuation basis for R-02-050 under clause 13.3. The current assessment says there is no BOQ rate for kerb removal and re-laying, so a new rate is required rather than using an existing BOQ line. Check whether any genuinely similar BOQ item exists and, if not, prepare the new rate.",
+    "owner": "quantity_surveyor",
+    "reason": "M-0005 and M-0007 identify a review item with no pending task yet.",
+    "proposed_by": "moderator",
     "status": "open",
-    "created_at": "2026-10-25T08:01:03.381+00:00"
+    "created_at": "2026-10-25T08:34:23.972+00:00"
   },
   {
     "task_id": "ACT-004",
-    "title": "Check kerb removal and re-laying design and rate for R-02-050",
-    "description": "Review the widened road section where the kerb line shifts, confirm the revised kerb detail, and agree a new rate for kerb removal and re-laying under clause 13.3 before valuation is finalised.",
-    "owner": "commercial",
-    "reason": "The kerb work is an open issue requiring review and a new rate, so a task should be created for the appropriate owner.",
+    "title": "Check revised kerb line and road geometry with design team",
+    "description": "Review whether the widened road alignment or revised kerb line creates any structural or design-coordination issue that needs design-team confirmation under clause 4.1. Report back whether a design check is required before the variation is approved.",
+    "owner": "planner",
+    "reason": "M-0007 identifies a design/check issue that needs its own task and no pending task is shown.",
     "proposed_by": "moderator",
     "status": "open",
-    "created_at": "2026-10-25T08:01:03.505+00:00"
+    "created_at": "2026-10-25T08:34:23.972+00:00"
   }
 ]

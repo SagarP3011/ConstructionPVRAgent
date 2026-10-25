@@ -6,9 +6,9 @@
       "quantity_surveyor",
       "contracts"
     ],
-    "message": "Please note the assessed PVR outcome for VI-017 / PVR-023 is ready for approval review. The current Pareto options are OPT-NONE, OPT-A340 and OPT-A320. Please prepare for follow-up once the approver selects a direction.",
-    "reason": "The approver should be able to trigger notifications to the planner, quantity surveyor, and contracts after review.",
+    "message": "Please note the PVR assessment is ready for approval. The open issues are the design adequacy check on the revised wall note, the structural review for B-04-005 and B-04-008, and confirmation of any new rate requirement before final issue.",
+    "reason": "The person should be able to approve notifications to the planner, quantity surveyor, and contracts so the open issues are tracked.",
     "proposed_by": "moderator",
-    "sent_at": "2026-10-25T08:02:40.130+00:00"
+    "sent_at": "2026-10-25T08:41:14.072+00:00"
   }
 ]

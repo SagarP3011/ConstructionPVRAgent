@@ -1,6 +1,6 @@
 {
   "status": "approved",
-  "option_id": "OPT-A120",
+  "option_id": "OPT-NONE",
   "approved_action_ids": [
     "ACT-001",
     "ACT-002",
@@ -10,7 +10,7 @@
   "approver_name": "Sam Lee",
   "approver_role": "Project Director",
   "reason": "",
-  "timestamp": "2026-10-25T08:01:03.378+00:00",
+  "timestamp": "2026-10-25T08:34:23.818+00:00",
   "presented_options": [
     "OPT-A120",
     "OPT-NONE"
@@ -18,34 +18,34 @@
   "final_stances": {
     "cost": "OPT-NONE",
     "contract": null,
-    "time": "OPT-A120",
+    "time": "OPT-NONE",
     "commercial": "OPT-A120"
   },
   "executed": [
     {
       "action_id": "ACT-001",
-      "type": "create_task",
-      "files": [
-        "tasks.json"
-      ],
-      "executed_at": "2026-10-25T08:01:03.381+00:00"
-    },
-    {
-      "action_id": "ACT-002",
       "type": "draft_pvr_form",
       "files": [
         "pvr_output_form.json",
         "pvr_output_form.html"
       ],
-      "executed_at": "2026-10-25T08:01:03.505+00:00"
+      "executed_at": "2026-10-25T08:34:23.970+00:00"
     },
     {
-      "action_id": "ACT-003",
+      "action_id": "ACT-002",
       "type": "notify",
       "files": [
         "notifications.json"
       ],
-      "executed_at": "2026-10-25T08:01:03.505+00:00"
+      "executed_at": "2026-10-25T08:34:23.972+00:00"
+    },
+    {
+      "action_id": "ACT-003",
+      "type": "create_task",
+      "files": [
+        "tasks.json"
+      ],
+      "executed_at": "2026-10-25T08:34:23.972+00:00"
     },
     {
       "action_id": "ACT-004",
@@ -53,7 +53,7 @@
       "files": [
         "tasks.json"
       ],
-      "executed_at": "2026-10-25T08:01:03.505+00:00"
+      "executed_at": "2026-10-25T08:34:23.972+00:00"
     }
   ]
 }

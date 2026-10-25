@@ -1,6 +1,6 @@
 {
   "form": "PVR output form",
-  "run_id": "R-20261025-075739-9105",
+  "run_id": "R-20261025-083323-2a56",
   "project": {
     "name": "Al Noor Gardens, Phase 2: Infrastructure and Landscaping Package",
     "contract_ref": "ANG-P2-C01",
@@ -279,29 +279,20 @@
     "delay_without_acceleration_days": 5
   },
   "chosen_option": {
-    "option_id": "OPT-A120",
-    "extra_crews_on": [
-      "A120"
-    ],
-    "accelerated": [
-      {
-        "activity_id": "A120",
-        "duration_before": 11,
-        "duration_after": 6,
-        "crew_cost_aed": 13800.0
-      }
-    ],
-    "completion_working_day": 87,
-    "completion_date": "2027-02-03",
-    "delay_working_days": 0,
+    "option_id": "OPT-NONE",
+    "extra_crews_on": [],
+    "accelerated": [],
+    "completion_working_day": 92,
+    "completion_date": "2027-02-09",
+    "delay_working_days": 5,
     "direct_cost_aed": 100440.0,
-    "acceleration_cost_aed": 13800.0,
-    "time_related_cost_aed": 0.0,
-    "total_cost_aed": 114240.0,
-    "time_buffer_remaining_days": 20,
-    "contingency_remaining_aed": -49240.0,
-    "cost_above_no_crews_aed": 1300.0,
-    "delay_saved_vs_no_crews_days": 5,
+    "acceleration_cost_aed": 0.0,
+    "time_related_cost_aed": 12500.0,
+    "total_cost_aed": 112940.0,
+    "time_buffer_remaining_days": 15,
+    "contingency_remaining_aed": -47940.0,
+    "cost_above_no_crews_aed": 0.0,
+    "delay_saved_vs_no_crews_days": 0,
     "critical_path": [
       "A010",
       "A020",
@@ -318,16 +309,16 @@
     ]
   },
   "chosen_option_buffer": {
-    "option_id": "OPT-A120",
-    "delay_working_days": 0,
-    "total_cost_aed": 114240.0,
+    "option_id": "OPT-NONE",
+    "delay_working_days": 5,
+    "total_cost_aed": 112940.0,
     "time_buffer_days": 20,
     "contingency_aed": 65000.0,
-    "time_buffer_remaining_days": 20,
-    "contingency_remaining_aed": -49240.0,
+    "time_buffer_remaining_days": 15,
+    "contingency_remaining_aed": -47940.0,
     "within_time_buffer": true,
     "within_contingency": false,
-    "budget_uplift_needed_aed": 49240.0,
+    "budget_uplift_needed_aed": 47940.0,
     "exceeds_employer_commitment": false
   },
   "presented_options": [
@@ -337,7 +328,7 @@
   "final_stances": {
     "cost": "OPT-NONE",
     "contract": null,
-    "time": "OPT-A120",
+    "time": "OPT-NONE",
     "commercial": "OPT-A120"
   },
   "clauses": [
@@ -381,11 +372,11 @@
   "approver": {
     "name": "Sam Lee",
     "role": "Project Director",
-    "approved_at": "2026-10-25T08:01:03.378+00:00"
+    "approved_at": "2026-10-25T08:34:23.818+00:00"
   },
   "verification": {
-    "messages_checked": 13,
-    "final_messages_passed": 13,
+    "messages_checked": 14,
+    "final_messages_passed": 14,
     "final_messages_unresolved": 0,
     "messages_corrected": 0
   }

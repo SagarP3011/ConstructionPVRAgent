@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Literal
 
-from pvr.agents.base import run_agent_turn
+from pvr.agents.base import AgentTurn, run_agent_turn
 from pvr.agents.roster import DEBATERS, get_agent
 from pvr.config import RUNS_DIR, Settings
 from pvr.engines import options as options_engine
@@ -38,7 +38,19 @@ TOOL_SECTIONS: dict[str, str] = {
     "check_buffer": "buffer", "compare_contractor_claim": "claim_comparison",
 }
 ANSWER_MAX_STEPS = 5
-State = Literal["created", "running", "awaiting_approval", "completed", "rejected"]
+
+
+class RunAborted(RuntimeError):
+    """The run cannot continue, for example because the language model cannot be reached."""
+
+
+def _checked(turn: AgentTurn) -> AgentTurn:
+    """Stop the run when an agent could not reach the model: an assessment without its agents must not
+    go on to an approval."""
+    if turn.model_unavailable:
+        raise RunAborted(f"The {turn.agent} agent could not reach the language model: {turn.error}")
+    return turn
+State = Literal["created", "running", "awaiting_approval", "completed", "rejected", "failed"]
 
 
 class Orchestrator:
@@ -66,11 +78,16 @@ class Orchestrator:
         if self.state != "created":
             raise RuntimeError("This run has already started")
         self.state = "running"
-        self._stage("intake", self._intake)
-        self._stage("assessment", self._assessment)
-        self._stage("commercial", self._commercial)
-        self._stage("debate", self._debate)
-        self._stage("synthesis", self._synthesis)
+        try:
+            self._stage("intake", self._intake)
+            self._stage("assessment", self._assessment)
+            self._stage("commercial", self._commercial)
+            self._stage("debate", self._debate)
+            self._stage("synthesis", self._synthesis)
+        except RunAborted as exc:
+            self.state = "failed"
+            self.session.bus.emit("run.error", {"error": str(exc), "fatal": True, "stage": self.session.stage})
+            raise
         return self._request_approval()
 
     def approve(self, option_id: str, action_ids: list[str], approver_name: str, approver_role: str
@@ -115,6 +132,9 @@ class Orchestrator:
         self.session.bus.emit("stage.completed", {"stage": stage, **extra})
 
     def _intake(self) -> None:
+        # Reference run for the UI: the baseline programme, so the Gantt chart can show baseline against
+        # impacted bars from events. It is not written to the blackboard and does not steer any agent.
+        self.registry.dispatch(self.session, "run_cpm", {"include_change_durations": False}, agent="orchestrator")
         message = self._turn("intake", stage_instruction("intake"), sections=[], inbox=[])
         if message:
             self.session.blackboard.merge("change", "intake_summary", message.content, "intake")
@@ -208,18 +228,18 @@ class Orchestrator:
               depth: int = 0, max_steps: int | None = None) -> AgentMessage | None:
         """One agent turn, verified, with one correction turn on failure. Returns the final message."""
         spec = get_agent(agent)
-        turn = run_agent_turn(self.session, spec, self.llm, instruction, blackboard_sections=sections,
-                              inbox=inbox, registry=self.registry, max_steps=max_steps, depth=depth)
+        turn = _checked(run_agent_turn(self.session, spec, self.llm, instruction, blackboard_sections=sections,
+                                       inbox=inbox, registry=self.registry, max_steps=max_steps, depth=depth))
         message = turn.message
         if message is None:
             return None
         result = self._verify(message)
         if not result.passed:
             note = self._explain_failure(message, result)
-            retry = run_agent_turn(
+            retry = _checked(run_agent_turn(
                 self.session, spec, self.llm, correction_instruction(message.message_id, result.issues),
                 blackboard_sections=sections, inbox=[message] + ([note] if note else []),
-                registry=self.registry, max_steps=max_steps, depth=depth)
+                registry=self.registry, max_steps=max_steps, depth=depth))
             if retry.message is not None:
                 corrected = retry.message
                 corrected.corrects = message.message_id
@@ -246,9 +266,9 @@ class Orchestrator:
 
     def _explain_failure(self, message: AgentMessage, result: VerificationResult) -> AgentMessage | None:
         """The Verifier agent tells the author what is wrong (the checks themselves are deterministic)."""
-        turn = run_agent_turn(self.session, get_agent("verifier"), self.llm,
-                              verifier_instruction(message.from_agent, message.message_id, result.issues),
-                              inbox=[message], registry=self.registry, max_steps=2, depth=1)
+        turn = _checked(run_agent_turn(self.session, get_agent("verifier"), self.llm,
+                                       verifier_instruction(message.from_agent, message.message_id, result.issues),
+                                       inbox=[message], registry=self.registry, max_steps=2, depth=1))
         return turn.message
 
     def _record_stance(self, agent: str, message: AgentMessage) -> None:
@@ -287,7 +307,7 @@ class Orchestrator:
 
     def _record_tool_result(self, outcome: ToolOutcome) -> None:
         section = TOOL_SECTIONS.get(outcome.tool)
-        if section is None:
+        if section is None or outcome.agent == "orchestrator":
             return
         key = outcome.result.get("option_id", outcome.tool) if outcome.tool in ("evaluate_option", "check_buffer") \
             else outcome.tool

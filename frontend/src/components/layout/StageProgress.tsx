@@ -11,15 +11,17 @@ interface StageProgressProps {
 export function StageProgress({ current, done = [] }: StageProgressProps) {
   const currentIndex = current ? STAGES.findIndex((s) => s.id === current) : -1;
   return (
-    <ol className="flex gap-1" aria-label="Run stages">
+    <ol className="flex shrink-0 gap-2" aria-label="Run stages">
       {STAGES.map((stage, index) => {
         const finished = done.includes(stage.id) || index < currentIndex;
         const state = finished ? "done" : stage.id === current ? "active" : "pending";
         const bar = state === "done" ? "bg-accent" : state === "active" ? "animate-pulse bg-accent-2" : "bg-surface-2";
         return (
-          <li key={stage.id} className="flex w-20 flex-col gap-1" aria-current={state === "active" ? "step" : undefined}>
-            <span className={`h-1.5 rounded-full ${bar}`} />
-            <span className={`text-[10px] ${state === "pending" ? "text-text-muted" : "text-accent"}`}>{stage.label}</span>
+          <li key={stage.id} className="flex min-w-16 flex-col gap-0.5" aria-current={state === "active" ? "step" : undefined}>
+            <span className={`h-1 rounded-full ${bar}`} />
+            <span className={`whitespace-nowrap text-[10px] leading-tight ${state === "pending" ? "text-text-muted" : "text-accent"}`}>
+              {stage.label}
+            </span>
           </li>
         );
       })}

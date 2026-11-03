@@ -55,7 +55,7 @@ export function RoomLayout({ connectionError, liveAvailable, onRerun, trace, vie
       ) : null}
 
       {view === "simple" ? (
-        <div className="grid h-[calc(100vh-190px)] min-h-[560px] shrink-0 grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-4">
+        <div className="grid h-[calc(100vh-170px)] min-h-[460px] shrink-0 grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-4">
           <Panel
             title="Agent Room"
             hint={ROOM_HINT}
@@ -70,7 +70,7 @@ export function RoomLayout({ connectionError, liveAvailable, onRerun, trace, vie
           </Panel>
         </div>
       ) : (
-      <div className="grid h-[calc(100vh-120px)] min-h-[620px] shrink-0 grid-cols-[minmax(0,25fr)_minmax(0,45fr)_minmax(0,30fr)] gap-4">
+      <div className="grid h-[calc(100vh-90px)] min-h-[620px] shrink-0 grid-cols-[minmax(0,25fr)_minmax(0,45fr)_minmax(0,30fr)] gap-4">
         <EvidencePanel />
 
         <div className="flex min-h-0 flex-col gap-4">

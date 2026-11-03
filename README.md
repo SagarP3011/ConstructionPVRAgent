@@ -8,42 +8,176 @@ agents reason about them; people approve. See `SPEC.md` for the full specificati
 
 ## Requirements
 
-- Python 3.11 or newer (setup prefers 3.12 when several versions are installed)
-- Node.js 20 or newer, with npm
-- Git
-- An OpenAI API key and a model that supports tool calling
+Install these first:
 
-## First-time setup
+| Tool | Version | macOS | Windows |
+|---|---|---|---|
+| Python | 3.11 or newer (3.12 recommended) | `brew install python@3.12` or https://www.python.org/downloads/ | https://www.python.org/downloads/ (tick "Add python.exe to PATH") |
+| Node.js (with npm) | 20 or newer | `brew install node` or https://nodejs.org | https://nodejs.org (LTS installer) |
+| Git | any recent | `xcode-select --install` or `brew install git` | https://git-scm.com/download/win |
 
-1. Copy `.env.example` to `.env` and fill in `OPENAI_API_KEY` and `OPENAI_MODEL`. Never commit `.env`.
-2. Install everything:
+You also need an OpenAI API key and a model that supports tool calling. Without a key, the app still runs and
+the recorded demo runs can be replayed.
 
-   | Windows (PowerShell) | macOS / Linux |
-   |---|---|
-   | `powershell -ExecutionPolicy Bypass -File scripts\setup.ps1` | `make setup` |
+Python dependencies are pinned in `requirements.txt` (the same versions as `backend/pyproject.toml`); frontend
+dependencies are pinned in `frontend/package-lock.json`.
 
-   This creates `backend/.venv`, installs the backend (pinned in `backend/pyproject.toml`) and
-   runs `npm ci` in `frontend/`.
+## Setup and run on macOS
 
-3. Check the OpenAI connection (the key is never printed):
+Run these in Terminal.
 
+1. Get the code:
+
+   ```bash
+   git clone https://github.com/SagarP3011/ConstructionPVRAgent.git
+   cd ConstructionPVRAgent
    ```
-   backend\.venv\Scripts\python.exe -m pvr.cli check-llm      # Windows, run from backend\
-   make check-llm                                              # macOS / Linux
+
+2. Create the settings file, then open `.env` and fill in `OPENAI_API_KEY` and `OPENAI_MODEL`. Never commit `.env`.
+
+   ```bash
+   cp .env.example .env
    ```
 
-   It confirms the key works, that `OPENAI_MODEL` is available to your key, and that it supports tool calling.
+3. Create the Python virtual environment and install the backend:
+
+   ```bash
+   python3 -m venv backend/.venv
+   source backend/.venv/bin/activate
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+4. Install the frontend:
+
+   ```bash
+   cd frontend
+   npm ci
+   cd ..
+   ```
+
+5. Check the OpenAI connection (optional; the key is never printed):
+
+   ```bash
+   cd backend
+   python -m pvr.cli check-llm
+   cd ..
+   ```
+
+6. Start the backend (Terminal window 1, from the repository folder):
+
+   ```bash
+   source backend/.venv/bin/activate
+   cd backend
+   python -m uvicorn pvr.api.main:app --host 127.0.0.1 --port 8000 --reload --reload-dir pvr
+   ```
+
+7. Start the frontend (Terminal window 2, from the repository folder):
+
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+8. Open http://localhost:5173. The header should say "Backend connected". Press Ctrl+C in each window to stop.
+
+Run the tests (from the repository folder, with the virtual environment active):
+
+```bash
+cd backend && python -m pytest -m "not live" && cd ..
+cd frontend && npm run typecheck && npm run test && cd ..
+```
+
+Shortcut: if `make` is available (it comes with the Xcode command line tools), `make setup` does steps 3 and 4,
+`make dev` does steps 6 and 7 in one window, `make test` runs the tests and `make check-llm` checks the key.
+
+## Setup and run on Windows
+
+Run these in PowerShell.
+
+1. Get the code:
+
+   ```powershell
+   git clone https://github.com/SagarP3011/ConstructionPVRAgent.git
+   cd ConstructionPVRAgent
+   ```
+
+2. Create the settings file, then open `.env` and fill in `OPENAI_API_KEY` and `OPENAI_MODEL`. Never commit `.env`.
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+3. Create the Python virtual environment and install the backend (use `python` instead of `py -3.12` if you do
+   not have the `py` launcher):
+
+   ```powershell
+   py -3.12 -m venv backend\.venv
+   backend\.venv\Scripts\python.exe -m pip install --upgrade pip
+   backend\.venv\Scripts\python.exe -m pip install -r requirements.txt
+   ```
+
+4. Install the frontend:
+
+   ```powershell
+   cd frontend
+   npm ci
+   cd ..
+   ```
+
+   If PowerShell says running scripts is disabled (for `npm`), run once:
+   `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+
+5. Check the OpenAI connection (optional; the key is never printed):
+
+   ```powershell
+   cd backend
+   .venv\Scripts\python.exe -m pvr.cli check-llm
+   cd ..
+   ```
+
+6. Start the backend (PowerShell window 1, from the repository folder):
+
+   ```powershell
+   cd backend
+   .venv\Scripts\python.exe -m uvicorn pvr.api.main:app --host 127.0.0.1 --port 8000 --reload --reload-dir pvr
+   ```
+
+7. Start the frontend (PowerShell window 2, from the repository folder):
+
+   ```powershell
+   cd frontend
+   npm run dev
+   ```
+
+8. Open http://localhost:5173. The header should say "Backend connected". Press Ctrl+C in each window to stop.
+
+Run the tests (from the repository folder):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts	est.ps1
+```
+
+Shortcut scripts (from the repository folder): `scripts\setup.ps1` does steps 3 and 4, `scripts\dev.ps1` does
+steps 6 and 7 in one window. Run them with `powershell -ExecutionPolicy Bypass -File scripts\<name>.ps1`.
 
 ## Daily commands
 
 | Task | Windows (PowerShell) | macOS / Linux |
 |---|---|---|
 | Run backend (:8000) and frontend (:5173) | `powershell -ExecutionPolicy Bypass -File scripts\dev.ps1` | `make dev` |
-| Tests (pytest without live tests, tsc, vitest) | `powershell -ExecutionPolicy Bypass -File scripts\test.ps1` | `make test` |
-| Live tests (calls OpenAI) | `powershell -ExecutionPolicy Bypass -File scripts\test.ps1 -Live` | `make test-live` |
+| Tests (pytest without live tests, tsc, vitest) | `powershell -ExecutionPolicy Bypass -File scripts	est.ps1` | `make test` |
+| Live tests (calls OpenAI) | `powershell -ExecutionPolicy Bypass -File scripts	est.ps1 -Live` | `make test-live` |
 
-Then open http://localhost:5173. The backend health check is at http://127.0.0.1:8000/api/health.
-Press Ctrl+C in the dev window to stop both servers.
+The backend health check is at http://127.0.0.1:8000/api/health.
+
+## Troubleshooting
+
+- **"Backend not reachable" in the header**: the backend is not running on port 8000; start it (step 6).
+- **Port already in use**: another copy is still running. Close it, or on macOS `lsof -i :8000` then `kill <PID>`;
+  on Windows `netstat -ano | findstr :8000` then `taskkill /PID <PID> /F`.
+- **Live runs not available**: `.env` has no `OPENAI_API_KEY`. Replays of saved runs still work.
+- **`pip install` fails building a package**: use Python 3.12; very new Python releases may not have wheels yet.
 
 ## Layout
 
@@ -55,6 +189,8 @@ Press Ctrl+C in the dev window to stop both servers.
 - `runs/`: generated run folders (git-ignored). `fixtures/`: recorded demo runs for replay.
 
 ## Console commands (from `backend\`)
+
+Shown for Windows. On macOS, activate the virtual environment and use `python` in place of `.venv\Scripts\python.exe`.
 
 | Command | What it does |
 |---|---|

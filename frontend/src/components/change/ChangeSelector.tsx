@@ -3,6 +3,7 @@ import { api, type ChangeType, type Interpretation, type StartRunBody, type Stor
 import type { Mode } from "../../api/events";
 import { CHANGE_LABEL, fillTemplate, formatDate, formatParameter } from "../../format";
 import { EmptyState, ErrorState, LoadingState, Panel } from "../layout/Panel";
+import { AssumptionsTab } from "./AssumptionsTab";
 import { FreeTextRequest } from "./FreeTextRequest";
 
 const CARD_TEXT: Record<string, string> = {
@@ -248,7 +249,7 @@ export function ChangeSelector({ liveAvailable, onRun, onReplay }: ChangeSelecto
         <SavedRuns runs={savedRuns} error={savedError} onReplay={onReplay} />
       </div>
 
-      <ProjectData />
+      <ProjectData changeType={changeType} values={values} />
     </main>
   );
 }
@@ -311,9 +312,16 @@ interface BoqRow {
   rate_aed: number;
 }
 
+const PROJECT_DATA_TABS = ["Contract", "BOQ", "Assumptions"] as const;
+const PROJECT_DATA_TAB_LABEL: Record<(typeof PROJECT_DATA_TABS)[number], string> = {
+  Contract: "Contract clauses",
+  BOQ: "BOQ (bill of quantities)",
+  Assumptions: "Rates and assumptions",
+};
+
 /** The given project data, for reference before a run (SPEC 17 step 1). */
-function ProjectData() {
-  const [tab, setTab] = useState<"Contract" | "BOQ">("Contract");
+function ProjectData({ changeType, values }: { changeType: ChangeType | null; values: Record<string, number> }) {
+  const [tab, setTab] = useState<(typeof PROJECT_DATA_TABS)[number]>("Contract");
   const [boq, setBoq] = useState<BoqRow[] | null>(null);
   const [clauses, setClauses] = useState<{ clause: string; title: string; text: string }[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -332,23 +340,24 @@ function ProjectData() {
       title="Project data"
       right={
         <div className="flex gap-1" role="tablist" aria-label="Project data">
-          {(["Contract", "BOQ"] as const).map((t) => (
+          {PROJECT_DATA_TABS.map((t) => (
             <button
               key={t}
               type="button"
               role="tab"
               aria-selected={tab === t}
               onClick={() => setTab(t)}
-              className={`rounded-full px-3 py-1 text-xs ${tab === t ? "bg-accent text-white" : "text-text-muted"}`}
+              className={`whitespace-nowrap rounded-full px-3 py-1 text-xs ${tab === t ? "bg-accent text-white" : "text-text-muted"}`}
             >
-              {t === "BOQ" ? "BOQ (bill of quantities)" : "Contract clauses"}
+              {PROJECT_DATA_TAB_LABEL[t]}
             </button>
           ))}
         </div>
       }
     >
-      {error ? <ErrorState message={error} /> : null}
-      {!error && (!boq || !clauses) ? <LoadingState message="Loading project data" /> : null}
+      {tab !== "Assumptions" && error ? <ErrorState message={error} /> : null}
+      {tab !== "Assumptions" && !error && (!boq || !clauses) ? <LoadingState message="Loading project data" /> : null}
+      {tab === "Assumptions" ? <AssumptionsTab changeType={changeType} values={values} /> : null}
       {tab === "Contract" && clauses ? (
         <ul className="flex flex-col gap-3">
           {clauses.map((c) => (

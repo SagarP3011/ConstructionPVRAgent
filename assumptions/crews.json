@@ -1,0 +1,163 @@
+{
+  "status": "Assumed for this proof of concept",
+  "note": "Illustrative crew make-up behind each work rate in data/productivity.json. Display only: no engine reads this file. Cost comes from the BOQ rates (which already include labour, equipment and materials) and added time comes from the output per crew-day. Labour hours per unit are worked out as people in the crew x hours per day / output per crew-day. Where one activity covers two BOQ items, the same crew does both in turn.",
+  "crews": [
+    {
+      "activity_id": "A100",
+      "crew_name": "Bulk excavation crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Excavator operator", "count": 1},
+        {"trade": "Tipper truck driver", "count": 4},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Excavator, 30 t", "Tipper trucks (4)"]
+    },
+    {
+      "activity_id": "A110",
+      "crew_name": "Subgrade crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Grader operator", "count": 1},
+        {"trade": "Roller operator", "count": 1},
+        {"trade": "Water tanker driver", "count": 1},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Motor grader", "Vibratory roller", "Water tanker"]
+    },
+    {
+      "activity_id": "A120",
+      "crew_name": "Granular layers crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Grader operator", "count": 1},
+        {"trade": "Roller operator", "count": 1},
+        {"trade": "Water tanker driver", "count": 1},
+        {"trade": "Tipper truck driver", "count": 2},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Motor grader", "Vibratory roller", "Water tanker", "Tipper trucks (2)"]
+    },
+    {
+      "activity_id": "A130",
+      "crew_name": "Kerb laying crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Mason", "count": 4},
+        {"trade": "Labourer", "count": 6},
+        {"trade": "Telehandler operator", "count": 1}
+      ],
+      "equipment": ["Telehandler", "Concrete mixer"]
+    },
+    {
+      "activity_id": "A140",
+      "crew_name": "Asphalt paving crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Paver operator", "count": 1},
+        {"trade": "Screed operator", "count": 2},
+        {"trade": "Roller operator", "count": 2},
+        {"trade": "Truck driver", "count": 4},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Asphalt paver", "Rollers (2)", "Asphalt trucks (4)"]
+    },
+    {
+      "activity_id": "A150",
+      "crew_name": "Asphalt paving crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Paver operator", "count": 1},
+        {"trade": "Screed operator", "count": 2},
+        {"trade": "Roller operator", "count": 2},
+        {"trade": "Truck driver", "count": 4},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Asphalt paver", "Rollers (2)", "Asphalt trucks (4)"]
+    },
+    {
+      "activity_id": "A300",
+      "crew_name": "Trench excavation crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Backhoe operator", "count": 1},
+        {"trade": "Tipper truck driver", "count": 1},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Backhoe loader", "Tipper truck"]
+    },
+    {
+      "activity_id": "A310",
+      "crew_name": "Concrete footing crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Steel fixer", "count": 3},
+        {"trade": "Carpenter (formwork)", "count": 2},
+        {"trade": "Labourer", "count": 3}
+      ],
+      "equipment": ["Ready-mix concrete trucks", "Poker vibrators"]
+    },
+    {
+      "activity_id": "A320",
+      "crew_name": "Blockwork and column crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Mason", "count": 3},
+        {"trade": "Carpenter (formwork)", "count": 1},
+        {"trade": "Steel fixer", "count": 1},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Mortar mixer", "Scaffold", "Poker vibrator"]
+    },
+    {
+      "activity_id": "A330",
+      "crew_name": "Plastering crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Plasterer", "count": 4},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Mortar mixer", "Scaffold"]
+    },
+    {
+      "activity_id": "A335",
+      "crew_name": "Coping crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Mason", "count": 2},
+        {"trade": "Labourer", "count": 2}
+      ],
+      "equipment": ["Small crane truck"]
+    },
+    {
+      "activity_id": "A340",
+      "crew_name": "Painting crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Painter", "count": 3},
+        {"trade": "Helper", "count": 1}
+      ],
+      "equipment": ["Scaffold", "Airless sprayer"]
+    },
+    {
+      "activity_id": "A420",
+      "crew_name": "Paving crew",
+      "hours_per_day": 8,
+      "trades": [
+        {"trade": "Foreman", "count": 1},
+        {"trade": "Paviour", "count": 6},
+        {"trade": "Labourer", "count": 6},
+        {"trade": "Loader operator", "count": 1}
+      ],
+      "equipment": ["Plate compactors", "Block cutter", "Skid-steer loader"]
+    }
+  ]
+}

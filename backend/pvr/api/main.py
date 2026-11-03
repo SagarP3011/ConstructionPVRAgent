@@ -21,6 +21,7 @@ from pydantic import BaseModel, Field
 
 from pvr import __version__
 from pvr.agents.interpret import Interpretation, InterpretError, interpret_request
+from pvr.api.assumptions import router as assumptions_router
 from pvr.api.runs import RunManager, RunStateError
 from pvr.config import DATA_DIR, GOLDEN_PATH, load_settings
 from pvr.data_loader import DATA_FILES, read_json
@@ -179,6 +180,9 @@ def create_app(manager: RunManager | None = None) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Read-only Rates and assumptions tab (display only; see pvr/api/assumptions.py).
+    app.include_router(assumptions_router)
 
     @app.get("/api/health", response_model=HealthResponse)
     def health() -> HealthResponse:
